@@ -22,6 +22,16 @@ public class Address {
 	}
 	
 	public int getTag(int blockSize, int blockNum) {
-		return address / (blockSize + blockNum);
+		return (address / (blockSize * blockNum));
+	}
+	
+	public static void main(String[] args) {
+		Address a1 = new Address(100);
+		Address a2 = new Address(17);
+		Address a3 = new Address(72);
+
+		System.out.println(a3.getOffset(8));
+		System.out.println(a3.getIndex(8, 4));
+		System.out.println(a3.getTag(8, 4));
 	}
 }
