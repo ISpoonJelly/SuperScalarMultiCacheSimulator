@@ -1,4 +1,4 @@
-package Cache;
+package cache;
 import java.util.HashMap;
 
 public class Cache {
@@ -8,11 +8,11 @@ public class Cache {
 	private int blockNum, blockSize, assoc, accessTime;
 	private boolean writeBack;
 	
-	public Cache(int blockNum, int blockSize, int assoc, int accessTime, boolean writeBack) {
+	public Cache(int CacheSize, int blockSize, int assoc, int accessTime, boolean writeBack) {
 		this.iCache = new HashMap<Integer, ICacheEntry>();
 		this.dCache = new HashMap<Integer, DCacheEntry>();
 		initializeCaches();
-		this.blockNum = blockNum;
+		this.blockNum = CacheSize/blockSize;
 		this.blockSize = blockSize;
 		this.assoc = assoc;
 		this.accessTime = accessTime;
@@ -74,7 +74,7 @@ public class Cache {
 		iCache.put(place, entry);
 	}
 	
-	public DCacheEntry fetchData(int address) {
+	public DCacheEntry getData(int address) {
 		Address adr = new Address(address);
 		int index = adr.getIndex(blockSize, blockNum);
 		int tag = adr.getTag(blockSize, blockNum);
@@ -130,5 +130,9 @@ public class Cache {
 		}
 		
 		dCache.put(place, entry);
+	}
+	
+	public int getBlockSize(){
+		return blockSize;
 	}
 }
