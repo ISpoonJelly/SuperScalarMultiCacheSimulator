@@ -3,10 +3,10 @@ package cache;
 public class ICacheEntry {
 	
 	private int tag;
-	private String data;
+	private String[] data;
 	private boolean dirty;
 	
-	public ICacheEntry(int tag, String data) {
+	public ICacheEntry(int tag, String[] data) {
 		this.tag = tag;
 		this.data = data;
 	}
@@ -15,7 +15,7 @@ public class ICacheEntry {
 		return tag;
 	}
 
-	public String getData() {
+	public String[] getData() {
 		return data;
 	}
 
@@ -26,4 +26,10 @@ public class ICacheEntry {
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;
 	}
+
+	public void setData(String data, int offset) {
+		this.data[offset] = data;
+	}
+	
+	
 }

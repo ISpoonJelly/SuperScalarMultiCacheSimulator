@@ -30,6 +30,7 @@ public class Cache {
 		Address adr = new Address(address);
 		int index = adr.getIndex(blockSize, blockNum);
 		int tag = adr.getTag(blockSize, blockNum);
+		int offset = adr.getOffset(blockSize);
 		
 		int set = index / assoc;
 		int startingAddress = set * assoc;
@@ -39,7 +40,7 @@ public class Cache {
 				ICacheEntry entry = iCache.get(i);
 				int foundTag = entry.getTag();
 				if(tag == foundTag) {
-					return entry.getData();
+					return entry.getData()[offset];
 				}
 			}
 		}
@@ -50,11 +51,14 @@ public class Cache {
 		Address adr = new Address(address);
 		int index = adr.getIndex(blockSize, blockNum);
 		int tag = adr.getTag(blockSize, blockNum);
+		int offset = adr.getOffset(blockSize);
+
 
 		int set = index / assoc;
 		int startingAddress = set * assoc;
 		
-		ICacheEntry entry = new ICacheEntry(tag, data);
+		ICacheEntry entry = new ICacheEntry(tag, new String[blockSize]);
+		entry.setData(data, offset);
 		
 		for (int i = startingAddress; i < startingAddress + assoc; i++) {
 			if(iCache.get(i) == null) {
@@ -95,7 +99,7 @@ public class Cache {
 	}
 	
 	public void updateData(DCacheEntry entry, Integer data) {
-		entry.setData(data);
+		//entry.setData(data);
 		
 		if(writeBack) {
 			entry.setDirty(true);
@@ -108,11 +112,14 @@ public class Cache {
 		Address adr = new Address(address);
 		int index = adr.getIndex(blockSize, blockNum);
 		int tag = adr.getTag(blockSize, blockNum);
+		int offset = adr.getOffset(blockSize);
+
 
 		int set = index / assoc;
 		int startingAddress = set * assoc;
 		
-		DCacheEntry entry = new DCacheEntry(tag, data);
+		DCacheEntry entry = new DCacheEntry(tag, new Integer[blockSize]);
+		entry.setData(data, offset);
 		
 		for (int i = startingAddress; i < startingAddress + assoc; i++) {
 			if(dCache.get(i) == null) {
@@ -134,5 +141,17 @@ public class Cache {
 	
 	public int getBlockSize(){
 		return blockSize;
+	}
+
+	public String[] fetchInstructions(int address) {
+		Address ad = new Address(address);
+		int offset = ad.getOffset(blockSize);
+		int startingAddress = address - offset;
+		
+		return iCache.get(startingAddress).getData();
+	}
+	
+	public void setInstructions(int address, String[] instructions) {
+		
 	}
 }

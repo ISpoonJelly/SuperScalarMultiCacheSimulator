@@ -3,10 +3,10 @@ package cache;
 public class DCacheEntry {
 	
 	private int tag;
-	private Integer data;
+	private Integer[] data;
 	private boolean dirty;
 	
-	public DCacheEntry(int tag, Integer data) {
+	public DCacheEntry(int tag, Integer[] data) {
 		this.tag = tag;
 		this.data = data;
 	}
@@ -15,7 +15,7 @@ public class DCacheEntry {
 		return tag;
 	}
 
-	public Integer getData() {
+	public Integer[] getData() {
 		return data;
 	}
 
@@ -27,7 +27,11 @@ public class DCacheEntry {
 		this.dirty = dirty;
 	}
 
-	public void setData(Integer data) {
+	public void setData(Integer[] data) {
 		this.data = data;
+	}
+	
+	public void setData(Integer data, int offset) {
+		this.data[offset] = data;
 	}
 }
