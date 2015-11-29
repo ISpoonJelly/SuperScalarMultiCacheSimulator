@@ -34,6 +34,7 @@ public class InstructionHandler {
 	 * 2. check that there is free Reservation Station for this instruction (Scoreboard) -Salma and Menna did this
 	 * 3. Insert instruction into ROB
 	 * 4. Insert instruction into Scoreboard
+	 * 5. Edit Register Status Table // To be created
 	 * 
 	 * Suggestion: 
 	 * We can repeat this class for all stages:
