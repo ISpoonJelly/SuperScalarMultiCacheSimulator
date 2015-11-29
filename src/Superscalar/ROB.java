@@ -1,4 +1,4 @@
-package instructions;
+package Superscalar;
 
 public class ROB {
 	ROBEntry[] rob;

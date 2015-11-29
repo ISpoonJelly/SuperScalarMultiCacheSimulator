@@ -3,10 +3,12 @@ package instructions;
 // ROB And Register File should be static variable among all classes!
 public class InstructionHandler {
 	//RegisterFile regFile;
+
 	String instruction;
 	
 	public InstructionHandler(String instruction){
 		this.instruction = instruction;
+		
 	}
 	
 	public void decode() {
