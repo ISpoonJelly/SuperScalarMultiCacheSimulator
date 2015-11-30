@@ -27,8 +27,8 @@ public class ICacheEntry {
 		this.dirty = dirty;
 	}
 
-	public void setData(String data, int offset) {
-		this.data[offset] = data;
+	public void setData(String[] data) {
+		this.data = data;
 	}
 	
 	
