@@ -11,62 +11,12 @@ public class ScoreBoard {
 	private int branch;
 	private int jump;
 	private int ret;
+	private int nand;
 	private HashMap<String, ScoreBoardEntry> scoreBoard = new HashMap<>();
 	
 	
-	
-	
-	
-	public int getLoad() {
-		return load;
-	}
-
-	public void setLoad(int load) {
-		this.load = load;
-	}
-
-	public int getStore() {
-		return store;
-	}
-
-	public void setStore(int store) {
-		this.store = store;
-	}
-
-	public int getAdd() {
-		return add;
-	}
-
-	public void setAdd(int add) {
-		this.add = add;
-	}
-
-	public int getMult() {
-		return mult;
-	}
-
-	public void setMult(int mult) {
-		this.mult = mult;
-	}
-
-	public int getBranch() {
-		return branch;
-	}
-
-	public void setBranch(int branch) {
-		this.branch = branch;
-	}
-
-	public HashMap<String, ScoreBoardEntry> getScoreBoard() {
-		return scoreBoard;
-	}
-
-	public void setScoreBoard(HashMap<String, ScoreBoardEntry> scoreBoard) {
-		this.scoreBoard = scoreBoard;
-	}
-
 	public ScoreBoard() {
-	
+		
 	}
 
 	public ScoreBoard (int load, int store, int add, int mult, int branch, int jump, int ret) {
@@ -125,7 +75,94 @@ public class ScoreBoard {
 			String l = "ret" + i;
 			scoreBoard.put(l, new ScoreBoardEntry(false, null ,"", "", null, null,null, 0));
 		}
+		//nand reservation stations 
+		for(int i = 1; i <= ret; i++) {
+			String l = "nand" + i;
+			scoreBoard.put(l, new ScoreBoardEntry(false, null ,"", "", null, null,null, 0));
+		}
 	}
+	
+	
+	public int getJump() {
+		return jump;
+	}
+
+	public void setJump(int jump) {
+		this.jump = jump;
+	}
+
+	public int getRet() {
+		return ret;
+	}
+
+	public void setRet(int ret) {
+		this.ret = ret;
+	}
+
+	public int getNand() {
+		return nand;
+	}
+
+	public void setNand(int nand) {
+		this.nand = nand;
+	}
+
+	
+	
+	
+	
+	
+	
+	public int getLoad() {
+		return load;
+	}
+
+	public void setLoad(int load) {
+		this.load = load;
+	}
+
+	public int getStore() {
+		return store;
+	}
+
+	public void setStore(int store) {
+		this.store = store;
+	}
+
+	public int getAdd() {
+		return add;
+	}
+
+	public void setAdd(int add) {
+		this.add = add;
+	}
+
+	public int getMult() {
+		return mult;
+	}
+
+	public void setMult(int mult) {
+		this.mult = mult;
+	}
+
+	public int getBranch() {
+		return branch;
+	}
+
+	public void setBranch(int branch) {
+		this.branch = branch;
+	}
+
+	public HashMap<String, ScoreBoardEntry> getScoreBoard() {
+		return scoreBoard;
+	}
+
+	public void setScoreBoard(HashMap<String, ScoreBoardEntry> scoreBoard) {
+		this.scoreBoard = scoreBoard;
+	}
+
+	
+
 	
 	public int freeFunctionalUnit(String operation, int nFunctionalUnits) {
 		

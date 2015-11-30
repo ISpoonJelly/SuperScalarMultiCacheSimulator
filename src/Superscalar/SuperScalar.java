@@ -14,6 +14,7 @@ public class SuperScalar {
 	public static StageRegister writeReg;
 	public static StageRegister commitReg;
 	public static IssueHandler issueHandler =  new IssueHandler();
+	public static int PC;
 	
 	public SuperScalar(int n, int sn){
 		issueReg = new StageRegister(n);
