@@ -4,11 +4,11 @@ package Superscalar;
 public class ROBEntry {
 	int id;
 	String type;
-	String value;
+	Integer value;
 	String dest;
 	boolean ready;
 	
-	public ROBEntry(int id, String type, String dest, String value, boolean ready) {
+	public ROBEntry(String type, String dest, Integer value, boolean ready) {
 		this.id = id;
 		this.type = type;
 		this.dest = dest;
@@ -29,10 +29,10 @@ public class ROBEntry {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getValue() {
+	public Integer getValue() {
 		return value;
 	}
-	public void setValue(String value) {
+	public void setValue(int value) {
 		this.value = value;
 	}
 	public String getDest() {
@@ -47,6 +47,7 @@ public class ROBEntry {
 	public void setReady(boolean ready) {
 		this.ready = ready;
 	}
+	
 	
 	
 }

@@ -1,32 +1,32 @@
 package Superscalar;
 
+import java.util.HashMap;
+
 public class RegisterStatus {
 	// for each register -> ROB Entry
-	int [] regStatus;
+	HashMap<String,Integer> regStatus = new HashMap<String, Integer>();
 	public RegisterStatus(){
-		
-		regStatus = new int[8];
-		for(int i = 0; i<regStatus.length; i++)
-			regStatus[i] = -1;
+		for(int i = 0; i<8; i++)
+			regStatus.put("R"+i, null);
 	}
 	
-	public void insert(int reg, int robNum)
+	public void insert(String reg, int robNum)
 	{
-		regStatus[reg]  = robNum;
+		regStatus.put(reg, robNum);
 	}
 	
-	public void remove(int reg)
+	public void remove(String reg)
 	{
-		regStatus[reg] = -1;
+		regStatus.put(reg,null);
 	}
 	
-	public boolean registerAvailable(int reg)
+	public boolean registerAvailable(String reg)
 	{
-		return regStatus[reg] == -1;
+		return regStatus.get(reg) == null;
 	}
 	
-	public int registerROBNum(int reg){
-		return regStatus[reg];
+	public int registerROBNum(String reg){
+		return regStatus.get(reg);
 	}
 	
 	

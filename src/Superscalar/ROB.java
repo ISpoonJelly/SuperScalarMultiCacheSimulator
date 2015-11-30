@@ -4,6 +4,22 @@ public class ROB {
 	ROBEntry[] rob;
 	int head, tail, entriesCount;
 	
+	public int getHead() {
+		return head;
+	}
+
+	public void setHead(int head) {
+		this.head = head;
+	}
+
+	public int getTail() {
+		return tail;
+	}
+
+	public void setTail(int tail) {
+		this.tail = tail;
+	}
+
 	public ROB (int robSize) {
 		rob = new ROBEntry[robSize+1];
 		head = tail = 1;
@@ -14,7 +30,7 @@ public class ROB {
 		return entriesCount == rob.length-1;
 	}
 	
-	public void setValue(int entryIndex, String value) {
+	public void setValue(int entryIndex, Integer value) {
 		rob[entryIndex].setValue(value);
 		rob[entryIndex].setReady(true);
 	}
@@ -56,6 +72,15 @@ public class ROB {
 		head++;
 		if ( (head == rob.length-1)) 
 			head = 1;
+	}
+	
+	public int getReg(String reg){
+		for(int i = 1; i<rob.length; i++)
+		{
+			if(rob[i].getDest().equals(reg))
+				return i;
+		}
+		return -1;
 	}
 	
 	

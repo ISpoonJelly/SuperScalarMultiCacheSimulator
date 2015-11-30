@@ -1,18 +1,20 @@
 package Superscalar;
 
+import java.util.HashMap;
 
 public class RegisterFile {
-	int[] registerFile;
+	HashMap<String, Integer> registerFile = new HashMap<String, Integer>();
 	
 	public RegisterFile() {
-		registerFile = new int[8];
+		for(int i = 0; i<8; i++)
+			registerFile.put("R"+i, null);
 	}
 	
-	public int getRegister(int i) {
-		return registerFile[i];
+	public int getRegister(String reg) {
+		return registerFile.get(reg);
 	}
 	
-	public void setRegister(int i, int value) {
-		registerFile[i] = value;
+	public void setRegister(String reg, int value) {
+		registerFile.put(reg, value);
 	}
 }
