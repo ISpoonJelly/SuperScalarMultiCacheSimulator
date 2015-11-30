@@ -15,6 +15,9 @@ public class SuperScalar {
 	public static StageRegister commitReg;
 	public static IssueHandler issueHandler =  new IssueHandler();
 	public static int PC;
+	public static ExecuteCycles execCycles = new ExecuteCycles();
+	public static IssueCycles issueCycles = new IssueCycles();
+	public static WriteCycles writeCycles = new WriteCycles();
 	
 	public SuperScalar(int n, int sn){
 		issueReg = new StageRegister(n);
@@ -39,6 +42,8 @@ public class SuperScalar {
 					first.cycles--;
 					if (first.cycles == 0) {
 						issueReg.getStageInstructions().put(i, null);
+						first.setCycles(execCycles.getExcuteCycles(first.getInstruction()));
+						executeReg.getStageInstructions().put(i, first);
 					}
 				}
 			}
