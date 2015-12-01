@@ -1,6 +1,8 @@
 package Superscalar;
 
+import instructions.ExecuteHandler;
 import instructions.IssueHandler;
+import instructions.WriteHandler;
 
 public class SuperScalar {
 	// to be changed according to rob size
@@ -14,6 +16,8 @@ public class SuperScalar {
 	public static StageRegister writeReg;
 	public static StageRegister commitReg;
 	public static IssueHandler issueHandler =  new IssueHandler();
+	public static ExecuteHandler executeHandler =  new ExecuteHandler();
+	public static WriteHandler writeHandler =  new WriteHandler();
 	public static int PC;
 	public static ExecuteCycles execCycles = new ExecuteCycles();
 	public static IssueCycles issueCycles = new IssueCycles();
@@ -38,13 +42,19 @@ public class SuperScalar {
 		for (int i = 0; i < superNumber; i++) {
 			StageInstruction first = issueReg.returnFirst();
 			if (first!=null) {
-				if (issueHandler.decode(first.instruction)) {
+				if (issueHandler.decode(first, first.cycles)) {
 					first.cycles--;
 					if (first.cycles == 0) {
 						issueReg.getStageInstructions().put(i, null);
 						first.setCycles(execCycles.getExcuteCycles(first.getInstruction()));
 						executeReg.getStageInstructions().put(i, first);
 					}
+				}
+					
+				else{
+					// you have to issue instructions in order
+					first.setStalled(true);
+					return;
 				}
 			}
 		}
@@ -55,8 +65,30 @@ public class SuperScalar {
 		
 	}
 	
+	/* 1. return array of instructions ready to be written in order
+	 * 2. write the first min(superNumber, instr.length)
+	 * 3. set the left ready instr to stall if found 
+	 */
 	public void write(){
+		StageInstruction []instr = writeReg.returnReadyInstructions();
+		for (int i = 0; i < Math.min(superNumber,instr.length); i++) {
+			StageInstruction first = instr[i];
+				if (writeHandler.decode(first)) {
+					first.cycles--;
+					if (first.cycles == 0) {
+						writeReg.getStageInstructions().put(i, null);
+						first.setCycles(1);
+						commitReg.getStageInstructions().put(i, first);
+					}
+				}
+			}
 		
+		if(instr.length > superNumber){
+			for(int i = superNumber; i<instr.length; i++){
+				StageInstruction ready = instr[i];
+				ready.setStalled(true);
+			}
+		}
 	}
 	
 	public void commit(){

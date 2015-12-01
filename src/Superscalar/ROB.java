@@ -83,5 +83,9 @@ public class ROB {
 		return -1;
 	}
 	
+	public void setReady(int id, boolean ready){
+		rob[id].setReady(ready);
+	}
+	
 	
 }

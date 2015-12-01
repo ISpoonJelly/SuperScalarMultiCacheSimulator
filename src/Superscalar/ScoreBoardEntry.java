@@ -12,7 +12,7 @@ public class ScoreBoardEntry {
 	private Integer destination;
 	
 	
-	public ScoreBoardEntry(boolean busy, Integer operation, String vj, String vk, Integer qj, Integer qk,Integer dest, int a) {
+	public ScoreBoardEntry(boolean busy, Integer operation, String vj, String vk, Integer qj, Integer qk, Integer dest, int a) {
 		this.a = a;
 		this.busy = busy;
 		Vj = vj;

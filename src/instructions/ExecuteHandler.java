@@ -1,13 +1,13 @@
 package instructions;
 
 public class ExecuteHandler {
-String instruction;
+
 	
-	public ExecuteHandler (String instruction){
-		this.instruction = instruction;
+	public ExecuteHandler (){
+		
 	}
 	
-	public boolean decode() {
+	public boolean decode(String instruction) {
 		String[] list = instruction.split(" ");
 		String op = list[0];
 		
