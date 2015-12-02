@@ -18,7 +18,7 @@ public class IssueHandler {
 
 	}
 
-	public boolean decode(StageInstruction stage, int cycles) {
+	public StageInstruction decode(StageInstruction stage, int cycles) {
 		String instruction = stage.getInstruction();
 		list = instruction.split(" ");
 		stageInstr = stage;
@@ -49,7 +49,7 @@ public class IssueHandler {
 			return handleBranch();
 
 		}
-		return false;
+		return null;
 	}
 
 	/* NOTE: PREDICTING BRANCH; WHAT IF CONTENT CHANGED AFTER PREDICTION!!
@@ -73,15 +73,15 @@ public class IssueHandler {
 	}
 
 	// beq regA, regB, imm
-	public boolean handleBranch() {
+	public StageInstruction handleBranch() {
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 
-		int fu = SuperScalar.scoreboard.freeFunctionalUnit("branch",
-				SuperScalar.scoreboard.getBranch());
+		int fu = SuperScalar.scoreboard.freeFunctionalUnit("add",
+				SuperScalar.scoreboard.getAdd());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		// predicting branch correctly
@@ -94,9 +94,9 @@ public class IssueHandler {
 		SuperScalar.PCBranchNotTaken = SuperScalar.PC+1;
 		SuperScalar.PCBranchTaken = SuperScalar.PC + 1 + Integer.parseInt(list[3]);
 		
-		if (Integer.parseInt(list[3]) < 0) {
-			SuperScalar.PC += 1 + Integer.parseInt(list[3]);
-		}
+//		if (Integer.parseInt(list[3]) < 0) {
+//			//SuperScalar.PC += 1 + Integer.parseInt(list[3]);
+//		}
 		
 		int dest = SuperScalar.rob.getTail();
 		String vj, vk;
@@ -118,26 +118,26 @@ public class IssueHandler {
 		}
 
 		ScoreBoardEntry scoreEntry = new ScoreBoardEntry(true,
-				Operation.BRANCH, vj, vk, qj, qk, dest, 0);
+				Operation.SUBTRACT, vj, vk, qj, qk, dest, 0);
 		stageInstr.setScoreEntry(scoreEntry);
-		stageInstr.setScoreKey("branch"+fu);
+		stageInstr.setScoreKey("add"+fu);
 		ROBEntry entry = new ROBEntry("BEQ", list[3], null, false);
 		SuperScalar.rob.insertEntry(entry);
-		SuperScalar.scoreboard.getScoreBoard().put("branch" + fu, scoreEntry);
-		return true;
+		SuperScalar.scoreboard.getScoreBoard().put("add" + fu, scoreEntry);
+		return stageInstr;
 
 	}
 
 
 	// mul regA, regB, regC
-	public boolean handleMult() {
+	public StageInstruction handleMult() {
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("mult",
 				SuperScalar.scoreboard.getMult());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		int dest = SuperScalar.rob.getTail();
@@ -171,18 +171,18 @@ public class IssueHandler {
 			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 		}
 
-		return true;
+		return stageInstr;
 	}
 
 	// sub regA, regB, regC
-	public boolean handleSub() {
+	public StageInstruction handleSub() {
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("add",
 				SuperScalar.scoreboard.getAdd());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		int dest = SuperScalar.rob.getTail();
@@ -215,19 +215,19 @@ public class IssueHandler {
 			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 		}
 
-		return true;
+		return stageInstr;
 	}
 
 	// addi regA, regB, imm
-	public boolean handleAddi() {
+	public StageInstruction handleAddi() {
 
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("add",
 				SuperScalar.scoreboard.getAdd());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		int dest = SuperScalar.rob.getTail();
@@ -260,20 +260,20 @@ public class IssueHandler {
 			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 		}
 
-		return true;
+		return stageInstr;
 
 	}
 
 	// nand regA, regB, regC
-	public boolean handleNand() {
+	public StageInstruction handleNand() {
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("nand",
 				SuperScalar.scoreboard.getNand());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		int dest = SuperScalar.rob.getTail();
@@ -306,22 +306,22 @@ public class IssueHandler {
 			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 		}
 		
-		return true;
+		return stageInstr;
 	}
 
 	// ret regA
-	public boolean handleReturn() {
+	public StageInstruction handleReturn() {
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("ret",
 				SuperScalar.scoreboard.getRet());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		// calculating PC
-		SuperScalar.PC = SuperScalar.registerFile.getRegister(list[1]);
+		//SuperScalar.PC = SuperScalar.registerFile.getRegister(list[1]);
 				
 		int dest = SuperScalar.rob.getTail();
 		String vj, vk;
@@ -346,7 +346,7 @@ public class IssueHandler {
 			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 		}
 		
-		return true;
+		return stageInstr;
 	}
 
 	// Stores the value of PC+1 in regA and branches (unconditionally) to the
@@ -355,18 +355,18 @@ public class IssueHandler {
 	 * Place the PC+1 in vj Place regB in vk
 	 */
 	// jalr regA, regB
-	public boolean handleJumpAndLink() {
+	public StageInstruction handleJumpAndLink() {
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("jump",
 				SuperScalar.scoreboard.getJump());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		// updating PC
-		SuperScalar.PC = SuperScalar.registerFile.getRegister(list[2]);
+		//SuperScalar.PC = SuperScalar.registerFile.getRegister(list[2]);
 
 		int dest = SuperScalar.rob.getTail();
 		String vj, vk;
@@ -398,26 +398,26 @@ public class IssueHandler {
 			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 		}
 		
-		return true;
+		return stageInstr;
 	}
 
 	/*
 	 * branches to the address PC+1+regA+imm Place regA in vj Place imm in vk
 	 */
 	// jmp regA, imm
-	public boolean handleJump() {
+	public StageInstruction handleJump() {
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("jump",
 				SuperScalar.scoreboard.getJump());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		// updating the PC
-		SuperScalar.PC += SuperScalar.registerFile.getRegister(list[1])
-				+ Integer.parseInt(list[2]);
+		//SuperScalar.PC += SuperScalar.registerFile.getRegister(list[1])
+				//+ Integer.parseInt(list[2]);
 
 		int dest = SuperScalar.rob.getTail();
 		String vj, vk;
@@ -446,19 +446,19 @@ public class IssueHandler {
 			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 		}
 		
-		return true;
+		return stageInstr;
 	}
 
 	// sw regA, regB, imm
-	public boolean handleStore(int cycles) {
+	public StageInstruction handleStore(int cycles) {
 		if (cycles == 1) {
 			if (!freeROB()) {
-				return false;
+				return null;
 			}
 			int fu = SuperScalar.scoreboard.freeFunctionalUnit("store",
 					SuperScalar.scoreboard.getStore());
 			if (fu == -1) {
-				return false;
+				return null;
 			}
 
 			int dest = SuperScalar.rob.getTail();
@@ -494,7 +494,7 @@ public class IssueHandler {
 				SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 			}
 			
-			return true;
+			return stageInstr;
 			
 			// calculating address
 		} else {
@@ -518,22 +518,23 @@ public class IssueHandler {
 				SuperScalar.scoreboard.calculateAddress(vj, "", vk, qk,
 						"store", Integer.parseInt(list[3]),
 						SuperScalar.scoreboard.getStore());
-				return true;
+				// return true
+				return stageInstr;
 			} else
-				return false;
+				return null;
 		}
 	}
 
 	// lw regA, regB, imm
-	public boolean handleLoad(int cycle) {
+	public StageInstruction handleLoad(int cycle) {
 		if (cycle == 1) {
 			if (!freeROB()) {
-				return false;
+				return null;
 			}
 			int fu = SuperScalar.scoreboard.freeFunctionalUnit("load",
 					SuperScalar.scoreboard.getLoad());
 			if (fu == -1) {
-				return false;
+				return null;
 			}
 
 			int dest = SuperScalar.rob.getTail();
@@ -561,7 +562,7 @@ public class IssueHandler {
 				SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 			}
 			
-			return true;
+			return stageInstr;
 			
 			// calculating address
 		} else {
@@ -578,22 +579,23 @@ public class IssueHandler {
 				SuperScalar.scoreboard.calculateAddress(vj, "", null, null,
 						"load", Integer.parseInt(list[3]),
 						SuperScalar.scoreboard.getLoad());
-				return true;
+				// true
+				return stageInstr;
 			} else {
-				return false;
+				return null;
 			}
 		}
 	}
 
 	// add regA, regB, regC
-	public boolean handleAdd() {
+	public StageInstruction handleAdd() {
 		if (!freeROB()) {
-			return false;
+			return null;
 		}
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("add",
 				SuperScalar.scoreboard.getAdd());
 		if (fu == -1) {
-			return false;
+			return null;
 		}
 
 		int dest = SuperScalar.rob.getTail();
@@ -626,6 +628,6 @@ public class IssueHandler {
 			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
 		}
 		
-		return true;
+		return stageInstr;
 	}
 }

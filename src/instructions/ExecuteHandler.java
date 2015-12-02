@@ -1,28 +1,34 @@
 package instructions;
 
-public class ExecuteHandler {
+import Superscalar.AfterBranchInstrRegister;
+import Superscalar.ExecuteCycles;
+import Superscalar.StageInstruction;
+import Superscalar.SuperScalar;
 
+public class ExecuteHandler {
+	
+	String[] list;
 	
 	public ExecuteHandler (){
 		
 	}
 	
-	public boolean decode(String instruction) {
-		String[] list = instruction.split(" ");
+	public boolean decode(StageInstruction instruction) {
+		list = instruction.getInstruction().split(" ");
 		String op = list[0];
 		
 		switch (op) {
-		case "add" : return handleAdd();
-		case "lw" : return handleLoad(); 
-		case "sw" : return handleStore(); 
-		case "jmp" : return handleJump(); 
-		case "jalr" : return handleJumpAndLink(); 
-		case "ret" : return handleReturn(); 
-		case "nand" : return handleNand(); 
-		case "addi" : return handleAddi(); 
-		case "sub" : return handleSub(); 
-		case "mul" : return handleMult(); 
-		case "beq" : return handleBranch(); 
+		case "add" : return true;
+		case "lw" : return true; 
+		case "sw" : return true; 
+		case "jmp" : return (instruction.getCycles() == ExecuteCycles.getJUMP()?handleJump():true); 
+		case "jalr" : return (instruction.getCycles() == ExecuteCycles.getJUMP_AND_LINK()?handleJumpAndLink():true); 
+		case "ret" : return (instruction.getCycles() == ExecuteCycles.getRETURN()?handleReturn():true); 
+		case "nand" : return true; 
+		case "addi" : return true; 
+		case "sub" : return  true; 
+		case "mul" : return true;
+		case "beq" : return (instruction.getCycles() == ExecuteCycles.getBRANCH()?handleBranch():true); 
 		
 		}
 		return false;
@@ -38,69 +44,52 @@ public class ExecuteHandler {
 	
 	//beq regA, regB, imm
 		public boolean handleBranch() {
-			// TODO Auto-generated method stub
+			
+			// FLUSH
+			if (Integer.parseInt(list[3]) < 0) {
+				SuperScalar.PC = SuperScalar.PCBranchTaken;
+				for (int i = 0; i < SuperScalar.afterBranchInstr.getSize(); i++) {
+
+					 int dest =	SuperScalar.afterBranchInstr.getStageInstructions()[i].getScoreEntry().getDestination();
+					 SuperScalar.rob.commitEntry(dest);
+					 String scoreKey = SuperScalar.afterBranchInstr.getStageInstructions()[i].getScoreKey();
+					 SuperScalar.scoreboard.deleteEntry(scoreKey);
+					}
+			} else {
+				SuperScalar.PC = SuperScalar.PCBranchNotTaken;
+			}
+			
+	
+			
 			return false;
 		}
-
-		//mul regA, regB, regC
-		public boolean handleMult() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		//sub regA, regB, regC
-		public boolean handleSub() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		//addi regA, regB, imm
-		public boolean handleAddi() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		//nand regA, regB, regC
-		public boolean handleNand() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
+	
 		//ret regA
 		public boolean handleReturn() {
-			// TODO Auto-generated method stub
-			return false;
+			// calculating PC
+			SuperScalar.PC = SuperScalar.registerFile.getRegister(list[1]);
+			
+			return true;
 		}
 
 		//jalr regA, regB
 		public boolean handleJumpAndLink() {
-			// TODO Auto-generated method stub
-			return false;
+		
+			
+			// updating PC
+			SuperScalar.PC = SuperScalar.registerFile.getRegister(list[2]);
+
+			return true;
 		}
 		
 		//jmp regA, imm
 		public boolean handleJump() {
-			// TODO Auto-generated method stub
-			return false;
+			SuperScalar.PC += SuperScalar.registerFile.getRegister(list[1])
+					+ Integer.parseInt(list[2]);
+			return true;
 		}
 		
-		//sw regA, regB, imm
-		public boolean handleStore() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		//lw regA, regB, imm
-		public boolean handleLoad() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		
-		//add regA, regB, regC
-		public boolean handleAdd() {
-			// TODO Auto-generated method stub
-			return false;
-		}
+			
 }
 
 

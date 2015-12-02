@@ -13,9 +13,13 @@ public class ScoreBoard {
 	private int ret;
 	private int nand;
 	private HashMap<String, ScoreBoardEntry> scoreBoard = new HashMap<>();
-
+	
 	public ScoreBoard() {
 
+	}
+	
+	public void deleteEntry(String fu) {
+		scoreBoard.put(fu, null);
 	}
 
 	public ScoreBoard(int load, int store, int add, int mult, int branch,

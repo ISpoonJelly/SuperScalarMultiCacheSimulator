@@ -25,4 +25,7 @@ public class AfterBranchInstrRegister {
 		return stageInstructions[current--];
 		
 	}
+	public int getSize () {
+		return current + 1; 
+	}
 }

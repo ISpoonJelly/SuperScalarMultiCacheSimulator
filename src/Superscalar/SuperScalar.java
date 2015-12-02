@@ -49,12 +49,12 @@ public class SuperScalar {
 		for (int i = 0; i < superNumber; i++) {
 			StageInstruction first = issueReg.returnFirst();
 			if (first!=null) {
-				if (issueHandler.decode(first, first.cycles)) {
+				if (issueHandler.decode(first, first.cycles) != null) {
 					first.cycles--;
 					if (first.cycles == 0) {
 						issueReg.getStageInstructions().put(i, null);
-						first.setCycles(execCycles.getExcuteCycles(first.getInstruction()));
-						executeReg.getStageInstructions().put(i, first);
+						first.setCycles(execCycles.getExcuteCycles(issueHandler.decode(first, first.cycles).getInstruction()));
+						executeReg.getStageInstructions().put(i, issueHandler.decode(first, first.cycles));
 					}
 				}
 					
@@ -69,6 +69,15 @@ public class SuperScalar {
 	}
 	
 	public void execute(){
+		
+		for(int i = 0; i < executeReg.numOfInstructions(); i++) {
+			
+			executeHandler.decode(executeReg.getStageInstructions().get(i));
+			
+			
+			executeReg.getStageInstructions().get(i).cycles -- ;
+			
+		}
 		
 	}
 	
