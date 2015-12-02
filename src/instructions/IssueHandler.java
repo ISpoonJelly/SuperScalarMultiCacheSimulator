@@ -85,11 +85,19 @@ public class IssueHandler {
 		}
 
 		// predicting branch correctly
-		if (SuperScalar.registerFile.getRegister(list[1]) == SuperScalar.registerFile
-				.getRegister(list[2])) {
+		/* if imm is Negative taken
+		 * if imm is Positive not taken
+		 * 
+		 */
+		SuperScalar.branchFound = true;
+		SuperScalar.branchImm = Integer.parseInt(list[3]);
+		SuperScalar.PCBranchNotTaken = SuperScalar.PC+1;
+		SuperScalar.PCBranchTaken = SuperScalar.PC + 1 + Integer.parseInt(list[3]);
+		
+		if (Integer.parseInt(list[3]) < 0) {
 			SuperScalar.PC += 1 + Integer.parseInt(list[3]);
 		}
-
+		
 		int dest = SuperScalar.rob.getTail();
 		String vj, vk;
 		Integer qj, qk;
@@ -116,7 +124,6 @@ public class IssueHandler {
 		ROBEntry entry = new ROBEntry("BEQ", list[3], null, false);
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("branch" + fu, scoreEntry);
-
 		return true;
 
 	}
@@ -159,6 +166,10 @@ public class IssueHandler {
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("mult" + fu, scoreEntry);
 		SuperScalar.registerStatus.insert(list[1], dest);
+		// adding to branchReg if branch before
+		if(SuperScalar.branchFound) {
+			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+		}
 
 		return true;
 	}
@@ -200,6 +211,9 @@ public class IssueHandler {
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("add" + fu, scoreEntry);
 		SuperScalar.registerStatus.insert(list[1], dest);
+		if(SuperScalar.branchFound) {
+			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+		}
 
 		return true;
 	}
@@ -242,6 +256,9 @@ public class IssueHandler {
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("add" + fu, scoreEntry);
 		SuperScalar.registerStatus.insert(list[1], dest);
+		if(SuperScalar.branchFound) {
+			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+		}
 
 		return true;
 
@@ -285,7 +302,10 @@ public class IssueHandler {
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("nand" + fu, scoreEntry);
 		SuperScalar.registerStatus.insert(list[1], dest);
-
+		if(SuperScalar.branchFound) {
+			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+		}
+		
 		return true;
 	}
 
@@ -322,7 +342,10 @@ public class IssueHandler {
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("ret" + fu, scoreEntry);
 		// SuperScalar.registerStatus.insert(list[1], dest);
-
+		if(SuperScalar.branchFound) {
+			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+		}
+		
 		return true;
 	}
 
@@ -371,7 +394,10 @@ public class IssueHandler {
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("jump" + fu, scoreEntry);
 		// SuperScalar.registerStatus.insert(list[1], dest);
-
+		if(SuperScalar.branchFound) {
+			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+		}
+		
 		return true;
 	}
 
@@ -416,7 +442,10 @@ public class IssueHandler {
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("jump" + fu, scoreEntry);
 		// SuperScalar.registerStatus.insert(list[1], dest);
-
+		if(SuperScalar.branchFound) {
+			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+		}
+		
 		return true;
 	}
 
@@ -461,6 +490,10 @@ public class IssueHandler {
 					.put("store" + fu, scoreEntry);
 			// SuperScalar.registerStatus.insert(list[1], dest);
 
+			if(SuperScalar.branchFound) {
+				SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+			}
+			
 			return true;
 			
 			// calculating address
@@ -524,6 +557,10 @@ public class IssueHandler {
 			SuperScalar.scoreboard.getScoreBoard().put("load" + fu, scoreEntry);
 			SuperScalar.registerStatus.insert(list[1], dest);
 
+			if(SuperScalar.branchFound) {
+				SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+			}
+			
 			return true;
 			
 			// calculating address
@@ -585,7 +622,10 @@ public class IssueHandler {
 		SuperScalar.rob.insertEntry(entry);
 		SuperScalar.scoreboard.getScoreBoard().put("add" + fu, scoreEntry);
 		SuperScalar.registerStatus.insert(list[1], dest);
-
+		if(SuperScalar.branchFound) {
+			SuperScalar.afterBranchInstr.insertInstr(stageInstr);
+		}
+		
 		return true;
 	}
 }

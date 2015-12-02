@@ -5,16 +5,23 @@ import instructions.IssueHandler;
 import instructions.WriteHandler;
 
 public class SuperScalar {
-	// to be changed according to rob size
-	public static int superNumber;
-	public static ROB rob = new ROB(4);
-	public static RegisterFile registerFile = new RegisterFile();
-	public static ScoreBoard scoreboard = new ScoreBoard();
-	public static RegisterStatus registerStatus = new RegisterStatus();
+
+	// Give stageRegisters size of instructions
+	public static AfterBranchInstrRegister afterBranchInstr;
 	public static StageRegister issueReg;
 	public static StageRegister executeReg;
 	public static StageRegister writeReg;
 	public static StageRegister commitReg;
+	public static boolean branchFound = false;
+	public static int PCBranchTaken = 0;
+	public static int PCBranchNotTaken = 0;
+	public static int branchImm = 0;
+	public static int superNumber;
+	// to be changed according to rob size
+	public static ROB rob = new ROB(4);
+	public static RegisterFile registerFile = new RegisterFile();
+	public static ScoreBoard scoreboard = new ScoreBoard();
+	public static RegisterStatus registerStatus = new RegisterStatus();	
 	public static IssueHandler issueHandler =  new IssueHandler();
 	public static ExecuteHandler executeHandler =  new ExecuteHandler();
 	public static WriteHandler writeHandler =  new WriteHandler();
