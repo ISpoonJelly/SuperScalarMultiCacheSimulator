@@ -73,8 +73,9 @@ public class WriteHandler {
 		} else {
 			regC = Integer.parseInt(vk);
 		}
-		int result = (regB == regC)?1:0;
-		int ROBNum = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getDestination();
+		int result = (regB == regC) ? 1 : 0;
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
@@ -99,7 +100,8 @@ public class WriteHandler {
 			regC = Integer.parseInt(vk);
 		}
 
-		int ROBNum = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getDestination();
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
 		int result = regB * regC;
 		SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
@@ -129,7 +131,8 @@ public class WriteHandler {
 			regC = Integer.parseInt(vk);
 		}
 
-		int ROBNum = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getDestination();
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
 		int result = regB - regC;
 		SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
@@ -153,11 +156,10 @@ public class WriteHandler {
 			regB = Integer.parseInt(vj);
 		}
 
-		
 		regC = Integer.parseInt(vk);
-		
 
-		int ROBNum = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getDestination();
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
 		int result = regB + regC;
 		SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
@@ -187,7 +189,8 @@ public class WriteHandler {
 			regC = Integer.parseInt(vk);
 		}
 
-		int ROBNum = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getDestination();
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
 		int result = ~(regB & regC);
 		SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
@@ -217,7 +220,8 @@ public class WriteHandler {
 			regC = Integer.parseInt(vk);
 		}
 
-		int ROBNum = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getDestination();
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
 		int result = regB + regC;
 		SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
@@ -231,7 +235,19 @@ public class WriteHandler {
 
 	// ret regA
 	public boolean handleReturn() {
-
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
+		String vj = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getVj();
+		int regA;
+		if (vj.charAt(0) == 'R') {
+			regA = SuperScalar.registerFile.getRegister(vj);
+		} else {
+			regA = Integer.parseInt(vj);
+		}
+		int result = regA;
+		SuperScalar.rob.setValue(ROBNum, result);
+		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 		return true;
@@ -239,7 +255,16 @@ public class WriteHandler {
 
 	// jalr regA, regB
 	public boolean handleJumpAndLink() {
-
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
+		// get PC+1 stored when issued in vj
+		int result = Integer.parseInt(SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreEntry()).getVj());
+		SuperScalar.registerFile.setRegister(list[1], result);
+		SuperScalar.registerStatus.remove(list[1]);
+		SuperScalar.rob.setValue(ROBNum, result);
+		SuperScalar.rob.setReady(ROBNum, true);
+		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 		return true;
@@ -247,7 +272,24 @@ public class WriteHandler {
 
 	// jmp regA, imm
 	public boolean handleJump() {
-
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
+		String vj = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getVj();
+		
+		int regA;
+		if (vj.charAt(0) == 'R') {
+			regA = SuperScalar.registerFile.getRegister(vj);
+		} else {
+			regA = Integer.parseInt(vj);
+		}
+		
+		int result = regA
+				+ Integer.parseInt(SuperScalar.scoreboard.getScoreBoard()
+						.get(stageInstr.getScoreEntry()).getVk())
+						;
+		SuperScalar.rob.setValue(ROBNum, result);
+		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 		return true;
@@ -255,7 +297,24 @@ public class WriteHandler {
 
 	// sw regA, regB, imm
 	public boolean handleStore() {
-
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
+		String vj = stageInstr.getScoreEntry().getVj();
+		int result;
+		if (vj.charAt(0) == 'R') {
+			result = SuperScalar.registerFile.getRegister(vj);
+		} else {
+			result = Integer.parseInt(vj);
+		}
+		
+		int address = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getA();
+		// TODO: insert into Mem[regB+imm] = regA(result)
+		/*
+		 * Mem[address] = result
+		 * 
+		 */
+		SuperScalar.rob.setValue(ROBNum, result);
+		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 		return true;
@@ -264,6 +323,28 @@ public class WriteHandler {
 	// lw regA, regB, imm
 	public boolean handleLoad() {
 
+		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getDestination();
+
+		// TODO: get from memory Mem[regB+imm] put it in result
+		int address = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getA();
+		/*
+		 * result = Mem[address]
+		 */
+		int result = -1;
+		
+		/*String vj = stageInstr.getScoreEntry().getVj();
+		if (vj.charAt(0) == 'R') {
+			result = SuperScalar.registerFile.getRegister(vj);
+		} else {
+			result = Integer.parseInt(vj);
+		}*/
+		
+		SuperScalar.registerFile.setRegister(list[1], result);
+		SuperScalar.registerStatus.remove(list[1]);
+		SuperScalar.rob.setValue(ROBNum, result);
+		SuperScalar.rob.setReady(ROBNum, true);
+		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 		return true;

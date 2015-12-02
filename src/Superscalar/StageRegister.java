@@ -13,6 +13,10 @@ public class StageRegister {
 		size = numInstructions;
 	}
 
+	public int getSize(){
+		return size;
+	}
+	
 	public HashMap<Integer, StageInstruction> getStageInstructions() {
 		return stageInstructions;
 	}
