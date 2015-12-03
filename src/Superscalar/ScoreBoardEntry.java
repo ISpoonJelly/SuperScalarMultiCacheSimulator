@@ -9,7 +9,7 @@ public class ScoreBoardEntry {
 	private Integer Qj; //rob # if first reg is not free
 	private Integer Qk; //rob # if second reg not free
 	private Integer operation;
-	private Integer destination;
+	private Integer destination; // rob Number
 	
 	
 	public ScoreBoardEntry(boolean busy, Integer operation, String vj, String vk, Integer qj, Integer qk, Integer dest, int a) {

@@ -13,7 +13,7 @@ public class WriteHandler {
 
 	}
 
-	public boolean decode(StageInstruction instr) {
+	public StageInstruction decode(StageInstruction instr) {
 		String instruction = instr.getInstruction();
 		list = instruction.split(" ");
 		String op = list[0];
@@ -43,7 +43,7 @@ public class WriteHandler {
 			return handleBranch();
 
 		}
-		return false;
+		return null;
 	}
 
 	/*
@@ -58,7 +58,7 @@ public class WriteHandler {
 
 	// do nothing on write
 	// beq regA, regB, imm
-	public boolean handleBranch() {
+	public StageInstruction handleBranch() {
 		String vj = stageInstr.getScoreEntry().getVj();
 		String vk = stageInstr.getScoreEntry().getVk();
 		int regB, regC;
@@ -80,11 +80,11 @@ public class WriteHandler {
 		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// mul regA, regB, regC
-	public boolean handleMult() {
+	public StageInstruction handleMult() {
 		String vj = stageInstr.getScoreEntry().getVj();
 		String vk = stageInstr.getScoreEntry().getVk();
 		int regB, regC;
@@ -110,11 +110,11 @@ public class WriteHandler {
 		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// sub regA, regB, regC
-	public boolean handleSub() {
+	public StageInstruction handleSub() {
 
 		String vj = stageInstr.getScoreEntry().getVj();
 		String vk = stageInstr.getScoreEntry().getVk();
@@ -141,11 +141,11 @@ public class WriteHandler {
 		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// addi regA, regB, imm
-	public boolean handleAddi() {
+	public StageInstruction handleAddi() {
 
 		String vj = stageInstr.getScoreEntry().getVj();
 		String vk = stageInstr.getScoreEntry().getVk();
@@ -168,11 +168,11 @@ public class WriteHandler {
 		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// nand regA, regB, regC
-	public boolean handleNand() {
+	public StageInstruction handleNand() {
 
 		String vj = stageInstr.getScoreEntry().getVj();
 		String vk = stageInstr.getScoreEntry().getVk();
@@ -199,11 +199,11 @@ public class WriteHandler {
 		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// add regA, regB, regC
-	public boolean handleAdd() {
+	public StageInstruction handleAdd() {
 
 		String vj = stageInstr.getScoreEntry().getVj();
 		String vk = stageInstr.getScoreEntry().getVk();
@@ -230,11 +230,11 @@ public class WriteHandler {
 		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// ret regA
-	public boolean handleReturn() {
+	public StageInstruction handleReturn() {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		String vj = SuperScalar.scoreboard.getScoreBoard()
@@ -250,11 +250,11 @@ public class WriteHandler {
 		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// jalr regA, regB
-	public boolean handleJumpAndLink() {
+	public StageInstruction handleJumpAndLink() {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		// get PC+1 stored when issued in vj
@@ -267,11 +267,11 @@ public class WriteHandler {
 		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// jmp regA, imm
-	public boolean handleJump() {
+	public StageInstruction handleJump() {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		String vj = SuperScalar.scoreboard.getScoreBoard()
@@ -292,11 +292,11 @@ public class WriteHandler {
 		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// sw regA, regB, imm
-	public boolean handleStore() {
+	public StageInstruction handleStore() {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		String vj = stageInstr.getScoreEntry().getVj();
@@ -313,15 +313,16 @@ public class WriteHandler {
 		 * Mem[address] = result
 		 * 
 		 */
+		stageInstr.setMemoryAddress(SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getA());
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 	// lw regA, regB, imm
-	public boolean handleLoad() {
+	public StageInstruction handleLoad() {
 
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
@@ -347,7 +348,7 @@ public class WriteHandler {
 		SuperScalar.scoreboard.update(ROBNum, result);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),
 				new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
-		return true;
+		return stageInstr;
 	}
 
 }

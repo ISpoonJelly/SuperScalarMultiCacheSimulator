@@ -102,7 +102,7 @@ public class SuperScalar {
 		StageInstruction[] instr = writeReg.returnReadyInstructions();
 		for (int i = 0; i < Math.min(superNumber, instr.length); i++) {
 			StageInstruction first = instr[i];
-			if (writeHandler.decode(first)) {
+			if (writeHandler.decode(first)!=null) {
 				first.cycles--;
 				if (first.cycles == 0) {
 					writeReg.getStageInstructions().put(i, null);

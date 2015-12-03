@@ -6,7 +6,24 @@ public class StageInstruction {
 	int cycles;
 	ScoreBoardEntry scoreEntry = null;
 	String scoreKey = null;
+	Integer memoryAddress = null;
 	
+
+	public StageInstruction(String instruction, boolean stalled, int cycles) {
+		super();
+		this.instruction = instruction;
+		this.stalled = stalled;
+		this.cycles = cycles;
+	}
+	
+
+	public Integer getMemoryAddress() {
+		return memoryAddress;
+	}
+
+	public void setMemoryAddress(Integer memoryAddress) {
+		this.memoryAddress = memoryAddress;
+	}
 
 	public String getScoreKey() {
 		return scoreKey;
@@ -16,12 +33,6 @@ public class StageInstruction {
 		this.scoreKey = scoreKey;
 	}
 
-	public StageInstruction(String instruction, boolean stalled, int cycles) {
-		super();
-		this.instruction = instruction;
-		this.stalled = stalled;
-		this.cycles = cycles;
-	}
 	
 	public ScoreBoardEntry getScoreEntry() {
 		return scoreEntry;
