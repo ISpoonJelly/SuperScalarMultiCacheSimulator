@@ -1,5 +1,7 @@
 package Superscalar;
 
+import cache.CacheHandler;
+import instructions.CommitHandler;
 import instructions.ExecuteHandler;
 import instructions.IssueHandler;
 import instructions.WriteHandler;
@@ -27,6 +29,8 @@ public class SuperScalar {
 	public static IssueHandler issueHandler = new IssueHandler();
 	public static ExecuteHandler executeHandler = new ExecuteHandler();
 	public static WriteHandler writeHandler = new WriteHandler();
+	public static CommitHandler commitHandler = new CommitHandler();
+	public static CacheHandler cacheHandler = new CacheHandler();
 	public static int PC;
 	public static ExecuteCycles execCycles = new ExecuteCycles();
 	public static IssueCycles issueCycles = new IssueCycles();
@@ -121,6 +125,14 @@ public class SuperScalar {
 	}
 
 	public void commit() {
+		StageInstruction []instr = commitReg.returnReadyInstructions();
+		for (int i=0; i<Math.min(superNumber, instr.length); i++) {
+			StageInstruction first = instr[i];
+			if (first.getScoreEntry().getDestination() == rob.getHead() && commitHandler.decode(first))
+				commitReg.getStageInstructions().put(i, null);
+			else
+				first.setStalled(true);
+		}
 
 	}
 

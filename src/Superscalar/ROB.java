@@ -87,5 +87,13 @@ public class ROB {
 		rob[id].setReady(ready);
 	}
 	
+	public boolean isReady(int id) {
+		return rob[id].isReady();
+	}
+	
+	public ROBEntry getEntry(int index) {
+		return rob[index];
+	}
+	
 	
 }

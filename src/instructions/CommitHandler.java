@@ -1,43 +1,54 @@
 package instructions;
 
+import Superscalar.StageInstruction;
+import Superscalar.SuperScalar;
+
 public class CommitHandler {
 
-String instruction;
-	
-	public CommitHandler (String instruction){
-		this.instruction = instruction;
+	StageInstruction instruction;
+	public CommitHandler (){
 	}
 	
-	public boolean decode() {
-		String[] list = instruction.split(" ");
+	public boolean decode(StageInstruction instruction) {
+		this.instruction = instruction;
+		String[] list = instruction.getInstruction().split(" ");
 		String op = list[0];
 		
-		switch (op) {
-		case "add" : return handleAdd();
-		case "lw" : return handleLoad(); 
-		case "sw" : return handleStore(); 
-		case "jmp" : return handleJump(); 
-		case "jalr" : return handleJumpAndLink(); 
-		case "ret" : return handleReturn(); 
-		case "nand" : return handleNand(); 
-		case "addi" : return handleAddi(); 
-		case "sub" : return handleSub(); 
-		case "mul" : return handleMult(); 
-		case "beq" : return handleBranch(); 
 		
-		}
+		if (op.equalsIgnoreCase("sw"))
+			handleStore();
+		else
+			handleNonStore();
 		return false;
 	}
+
+		public boolean handleNonStore() {
+			int head = SuperScalar.rob.getHead();
+			if (SuperScalar.rob.isReady(head)) {
+				String reg = SuperScalar.rob.getEntry(head).getDest();
+				Integer value = SuperScalar.rob.getEntry(head).getValue();
+				SuperScalar.registerFile.setRegister(reg, value.intValue());
+				SuperScalar.rob.commitEntry(head);
+			}
+			
+			return true;
+		}
+		
+		//sw regA, regB, imm
+		public boolean handleStore() {
+			int head = SuperScalar.rob.getHead();
+			if (SuperScalar.rob.isReady(head)) {
+				Integer mem = instruction.getMemoryAddress();
+				Integer value = SuperScalar.rob.getEntry(head).getValue();
+				SuperScalar.cacheHandler.putData(mem.intValue(), value.intValue());
+				SuperScalar.rob.commitEntry(head);
+			}
+			
+			return true;
+		}
 	
-	/*
-	 *	Check that operands are ready
-	 * 
-	 * 
-	 * 
-	 */
 	
-	
-	//beq regA, regB, imm
+		//beq regA, regB, imm
 		public boolean handleBranch() {
 			// TODO Auto-generated method stub
 			return false;
@@ -85,11 +96,7 @@ String instruction;
 			return false;
 		}
 		
-		//sw regA, regB, imm
-		public boolean handleStore() {
-			// TODO Auto-generated method stub
-			return false;
-		}
+	
 
 		//lw regA, regB, imm
 		public boolean handleLoad() {

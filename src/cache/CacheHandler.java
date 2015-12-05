@@ -7,6 +7,14 @@ public class CacheHandler {
 	private Cache[] caches;
 	private int cacheBlockSize;
 	
+	public CacheHandler() {
+		
+	}
+	
+	public void putData(int memoryAddress, int value) {
+		
+	}
+	
 	public CacheHandler(int cacheNum, MainMemory memory, int cacheBlockSize){
 		this.memory = memory;
 		this.cacheBlockSize = cacheBlockSize;
