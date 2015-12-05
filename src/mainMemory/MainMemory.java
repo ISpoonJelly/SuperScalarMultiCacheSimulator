@@ -14,11 +14,12 @@ public class MainMemory {
 	public MainMemory(int accessTime) {
 		this.accessTime= accessTime;
 		initMemory();
-		
 	}
 	
 	public void initMemory()
 	{
+		iMemory = new HashMap<Integer, String>();
+		dMemory = new HashMap<Integer, Integer>();
 		for(int i = 0; i<size; i++)
 		{
 			iMemory.put(i,null);
@@ -68,14 +69,6 @@ public class MainMemory {
 
 	public void setiMemory(HashMap<Integer, String> iMemory) {
 		this.iMemory = iMemory;
-	}
-
-	public HashMap<Integer, Integer> getdMemory() {
-		return dMemory;
-	}
-
-	public void setdMemory(HashMap<Integer, Integer> dMemory) {
-		this.dMemory = dMemory;
 	}
 
 	public int getAccessTime() {
