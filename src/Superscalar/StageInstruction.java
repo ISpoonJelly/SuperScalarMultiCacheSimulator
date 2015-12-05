@@ -6,6 +6,16 @@ public class StageInstruction {
 	int cycles;
 	ScoreBoardEntry scoreEntry = null;
 	String scoreKey = null;
+	int instructionNum;
+	
+	public int getInstructionNum() {
+		return instructionNum;
+	}
+
+
+	public void setInstructionNum(int instructionNum) {
+		this.instructionNum = instructionNum;
+	}
 	Integer memoryAddress = null;
 	
 

@@ -86,11 +86,22 @@ public class SuperScalar {
 		 * TODO: - Check that Operands are ready 
 		 * - Set Stall boolean to true if not
 		 */
-		for (int i = 0; i < executeReg.getSize(); i++) {
-
-			if (executeReg.getStageInstructions().get(i) != null) {
-				executeHandler.decode(executeReg.getStageInstructions().get(i));
-				executeReg.getStageInstructions().get(i).cycles--;
+		StageInstruction[] instr = executeReg.returnReadyInstructions();
+		for (int i = 0; i < instr.length; i++) {
+			Integer qj = SuperScalar.scoreboard.getScoreBoard().get(instr[i].getScoreKey()).getQj();
+			Integer qk = SuperScalar.scoreboard.getScoreBoard().get(instr[i].getScoreKey()).getQk();
+			if(qk == null && qj == null){
+			
+				executeHandler.decode(instr[i]);
+				instr[i].cycles--;
+				if(instr[i].cycles==0){
+					executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), null);
+					writeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), instr[i]);
+				}
+			}
+			else {
+				instr[i].setStalled(true);
+				executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), instr[i]);
 			}
 
 		}
@@ -109,9 +120,9 @@ public class SuperScalar {
 			if (writeHandler.decode(first)!=null) {
 				first.cycles--;
 				if (first.cycles == 0) {
-					writeReg.getStageInstructions().put(i, null);
+					writeReg.getStageInstructions().put(writeReg.findIndex(instr[i]), null);
 					first.setCycles(1);
-					commitReg.getStageInstructions().put(i, first);
+					commitReg.getStageInstructions().put(writeReg.findIndex(instr[i]), first);
 				}
 			}
 		}
@@ -120,6 +131,7 @@ public class SuperScalar {
 			for (int i = superNumber; i < instr.length; i++) {
 				StageInstruction ready = instr[i];
 				ready.setStalled(true);
+				writeReg.getStageInstructions().put(writeReg.findIndex(instr[i]), ready);
 			}
 		}
 	}
@@ -129,9 +141,11 @@ public class SuperScalar {
 		for (int i=0; i<Math.min(superNumber, instr.length); i++) {
 			StageInstruction first = instr[i];
 			if (first.getScoreEntry().getDestination() == rob.getHead() && commitHandler.decode(first))
-				commitReg.getStageInstructions().put(i, null);
-			else
+				commitReg.getStageInstructions().put(commitReg.findIndex(instr[i]), null);
+			else{
 				first.setStalled(true);
+				commitReg.getStageInstructions().put(commitReg.findIndex(instr[i]), first);
+			}
 		}
 
 	}

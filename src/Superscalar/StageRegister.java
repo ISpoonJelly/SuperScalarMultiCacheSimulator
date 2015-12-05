@@ -58,5 +58,16 @@ public class StageRegister {
 		return array;
 
 	}
+	
+	public int findIndex(StageInstruction stageInstr){
+		int index = -1;
+		for(int i = 0; i<size; i++){
+			if(stageInstructions.get(i).getScoreKey().equals(stageInstr.getScoreKey())){
+				index = i;
+			}
+		}
+		
+		return index;
+	}
 
 }

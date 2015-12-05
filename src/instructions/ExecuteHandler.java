@@ -51,38 +51,67 @@ public class ExecuteHandler {
 	}
 
 	/*
-	 * TODO: - Perform the subtraction between regA and regB 
-	 * 	  - if(regA - regB == 0) 
-	 * 		- if(imm < 0) do nothing 
-	 * 	  	- else FLUSH 
-	 * - else (Not Equal) 
-	 * 		- if(imm > 0) do nothing 
-	 * 		- else FLUSH
+	 * TODO: - Perform the subtraction between regA and regB - if(regA - regB ==
+	 * 0) - if(imm < 0) do nothing - else FLUSH - else (Not Equal) - if(imm > 0)
+	 * do nothing - else FLUSH
 	 * 
-	 * - Don't use values from list[] because registers in scoreboard may be updated with values :')
-	 * - Just get Vk and Vj from Scoreboard and check if there are in the form of Rx or Integers
-	 * - I fixed the jumps and return for this check 
+	 * - Don't use values from list[] because registers in scoreboard may be
+	 * updated with values :') - Just get Vk and Vj from Scoreboard and check if
+	 * there are in the form of Rx or Integers - I fixed the jumps and return
+	 * for this check
 	 */
+
 	// beq regA, regB, imm
 	public boolean handleBranch() {
 
 		// FLUSH
-		if (Integer.parseInt(list[3]) < 0) {
-			SuperScalar.PC = SuperScalar.PCBranchTaken;
-			for (int i = 0; i < SuperScalar.afterBranchInstr.getSize(); i++) {
-
-				int dest = SuperScalar.afterBranchInstr.getStageInstructions()[i]
-						.getScoreEntry().getDestination();
-				SuperScalar.rob.commitEntry(dest);
-				String scoreKey = SuperScalar.afterBranchInstr
-						.getStageInstructions()[i].getScoreKey();
-				SuperScalar.scoreboard.deleteEntry(scoreKey);
-			}
+		String vk, vj;
+		vj = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getVj();
+		vk = SuperScalar.scoreboard.getScoreBoard()
+				.get(stageInstr.getScoreKey()).getVk();
+		int regA, regB;
+		if (vk.charAt(0) == 'R') {
+			regB = SuperScalar.registerFile.getRegister(vk);
 		} else {
-			SuperScalar.PC = SuperScalar.PCBranchNotTaken;
+			regB = Integer.parseInt(vk);
 		}
 
-		return false;
+		if (vj.charAt(0) == 'R') {
+			regA = SuperScalar.registerFile.getRegister(vj);
+		} else {
+			regA = Integer.parseInt(vj);
+		}
+		if (regA - regB == 0) {
+			if (SuperScalar.branchImm > 0) {
+				SuperScalar.PC = SuperScalar.PCBranchTaken;
+				for (int i = 0; i < SuperScalar.afterBranchInstr.getSize(); i++) {
+					int dest = SuperScalar.afterBranchInstr
+							.getStageInstructions()[i].getScoreEntry()
+							.getDestination();
+					SuperScalar.rob.commitEntry(dest);
+					String scoreKey = SuperScalar.afterBranchInstr
+							.getStageInstructions()[i].getScoreKey();
+					SuperScalar.scoreboard.deleteEntry(scoreKey);
+				}
+			}
+		} else {
+			if (SuperScalar.branchImm < 0) {
+				SuperScalar.PC = SuperScalar.PCBranchNotTaken;
+				for (int i = 0; i < SuperScalar.afterBranchInstr.getSize(); i++) {
+
+					int dest = SuperScalar.afterBranchInstr
+							.getStageInstructions()[i].getScoreEntry()
+							.getDestination();
+					SuperScalar.rob.commitEntry(dest);
+					String scoreKey = SuperScalar.afterBranchInstr
+							.getStageInstructions()[i].getScoreKey();
+					SuperScalar.scoreboard.deleteEntry(scoreKey);
+				}
+			}
+
+		}
+		return true;
 	}
 
 	// ret regA
