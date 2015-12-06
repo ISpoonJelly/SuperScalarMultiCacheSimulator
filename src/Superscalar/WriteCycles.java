@@ -1,7 +1,7 @@
 package Superscalar;
 
 public class WriteCycles {
-	public int STORE = 2;
+	public static int STORE = 2;
 	
 	public WriteCycles(int store){
 		STORE = store;
@@ -17,5 +17,10 @@ public class WriteCycles {
 			return 1;
 		}
 		
+	}
+
+	public static int getSTORE() {
+		// TODO Auto-generated method stub
+		return STORE;
 	}
 }

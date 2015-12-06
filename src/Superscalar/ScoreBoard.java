@@ -14,17 +14,17 @@ public class ScoreBoard {
 	private int ret;
 	private int nand;
 	private HashMap<String, ScoreBoardEntry> scoreBoard = new HashMap<>();
-	
+
 	public ScoreBoard() {
 
 	}
-	
+
 	public void deleteEntry(String fu) {
 		scoreBoard.put(fu, null);
 	}
 
-	public ScoreBoard(int load, int store, int add, int mult,
-			int jump, int ret, int nand) {
+	public ScoreBoard(int load, int store, int add, int mult, int jump,
+			int ret, int nand) {
 		this.load = load;
 		this.store = store;
 		this.add = add;
@@ -36,8 +36,6 @@ public class ScoreBoard {
 		initialize();
 
 	}
-	
-	
 
 	public void initialize() {
 
@@ -172,7 +170,8 @@ public class ScoreBoard {
 				if (scoreBoard.get(operation + i).getVj().equals(vj)
 						&& scoreBoard.get(operation + i).getVk().equals(vk)
 						&& scoreBoard.get(operation + i).getA() == addr) {
-					scoreBoard.get(operation + i).setA(addr + SuperScalar.registerFile.getRegister(vj));
+					scoreBoard.get(operation + i).setA(
+							addr + SuperScalar.registerFile.getRegister(vj));
 				}
 			}
 		}
@@ -183,77 +182,81 @@ public class ScoreBoard {
 		// loadt reservation stations
 		for (int i = 1; i <= load; i++) {
 			String l = "load" + i;
-			if(scoreBoard.get(l).getQj() == rOBNum){
-				scoreBoard.get(l).setVj(result+"");
-				scoreBoard.get(l).setQj(null);
+				if (scoreBoard.get(l).getQj() != null && scoreBoard.get(l).getQj() == rOBNum) {
+					scoreBoard.get(l).setVj(result + "");
+					scoreBoard.get(l).setQj(null);
+				}
+				if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+					scoreBoard.get(l).setVk(result + "");
+					scoreBoard.get(l).setQk(null);
+				}
 			}
-			if(scoreBoard.get(l).getQk() == rOBNum){
-				scoreBoard.get(l).setVk(result+"");
-				scoreBoard.get(l).setQk(null);
-			}
-		}
+		
 
 		// store reservation stations
 		for (int i = 1; i <= store; i++) {
 			String l = "store" + i;
-			if(scoreBoard.get(l).getQj() == rOBNum){
-				scoreBoard.get(l).setVj(result+"");
-				scoreBoard.get(l).setQj(null);
+			
+				if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+					scoreBoard.get(l).setVj(result + "");
+					scoreBoard.get(l).setQj(null);
+				}
+				if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+					scoreBoard.get(l).setVk(result + "");
+					scoreBoard.get(l).setQk(null);
+				}
 			}
-			if(scoreBoard.get(l).getQk() == rOBNum){
-				scoreBoard.get(l).setVk(result+"");
-				scoreBoard.get(l).setQk(null);
-			}
-		}
-
+		
 		// add reservation stations
 		for (int i = 1; i <= add; i++) {
+
 			String l = "add" + i;
-			if(scoreBoard.get(l).getQj() == rOBNum){
-				scoreBoard.get(l).setVj(result+"");
-				scoreBoard.get(l).setQj(null);
+				if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+					scoreBoard.get(l).setVj(result + "");
+					scoreBoard.get(l).setQj(null);
+				}
+				if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+					scoreBoard.get(l).setVk(result + "");
+					scoreBoard.get(l).setQk(null);
+				}
 			}
-			if(scoreBoard.get(l).getQk() == rOBNum){
-				scoreBoard.get(l).setVk(result+"");
-				scoreBoard.get(l).setQk(null);
-			}
-		}
+		
 
 		// mult reservation stations
 		for (int i = 1; i <= mult; i++) {
 			String l = "mult" + i;
-			if(scoreBoard.get(l).getQj() == rOBNum){
-				scoreBoard.get(l).setVj(result+"");
+			if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
 			}
-			if(scoreBoard.get(l).getQk() == rOBNum){
-				scoreBoard.get(l).setVk(result+"");
+			if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
 			}
 		}
 
-//		// branch reservation stations
-//		for (int i = 1; i <= branch; i++) {
-//			String l = "branch" + i;
-//			if(scoreBoard.get(l).getQj() == rOBNum){
-//				scoreBoard.get(l).setVj(result+"");
-//				scoreBoard.get(l).setQj(null);
-//			}
-//			if(scoreBoard.get(l).getQk() == rOBNum){
-//				scoreBoard.get(l).setVk(result+"");
-//				scoreBoard.get(l).setQk(null);
-//			}
-//		}
+		// // branch reservation stations
+		// for (int i = 1; i <= branch; i++) {
+		// String l = "branch" + i;
+		// if(scoreBoard.get(l).getQj() == rOBNum){
+		// scoreBoard.get(l).setVj(result+"");
+		// scoreBoard.get(l).setQj(null);
+		// }
+		// if(scoreBoard.get(l).getQk() == rOBNum){
+		// scoreBoard.get(l).setVk(result+"");
+		// scoreBoard.get(l).setQk(null);
+		// }
+		// }
 
 		// jump reservation stations
 		for (int i = 1; i <= jump; i++) {
 			String l = "jump" + i;
-			if(scoreBoard.get(l).getQj() == rOBNum){
-				scoreBoard.get(l).setVj(result+"");
+			if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
 			}
-			if(scoreBoard.get(l).getQk() == rOBNum){
-				scoreBoard.get(l).setVk(result+"");
+			if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
 			}
 		}
@@ -261,45 +264,49 @@ public class ScoreBoard {
 		// return reservation stations
 		for (int i = 1; i <= ret; i++) {
 			String l = "ret" + i;
-			if(scoreBoard.get(l).getQj() == rOBNum){
-				scoreBoard.get(l).setVj(result+"");
+			if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
 			}
-			if(scoreBoard.get(l).getQk() == rOBNum){
-				scoreBoard.get(l).setVk(result+"");
+			if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
 			}
 		}
 		// nand reservation stations
-		for (int i = 1; i <= ret; i++) {
+		for (int i = 1; i <= nand; i++) {
 			String l = "nand" + i;
-			if(scoreBoard.get(l).getQj() == rOBNum){
-				scoreBoard.get(l).setVj(result+"");
+			if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
 			}
-			if(scoreBoard.get(l).getQk() == rOBNum){
-				scoreBoard.get(l).setVk(result+"");
+			if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
 			}
 		}
 	}
-	
+
 	public String toString() {
 		String s = "Functional Unit --> busy -- operation -- vj -- vk -- qj -- qk -- destination -- a\n";
-		
-		Iterator<Map.Entry<String, ScoreBoardEntry>> iterator = scoreBoard.entrySet().iterator();
-		
+
+		Iterator<Map.Entry<String, ScoreBoardEntry>> iterator = scoreBoard
+				.entrySet().iterator();
+
 		while (iterator.hasNext()) {
-			Map.Entry<String, ScoreBoardEntry> entry = (Map.Entry<String, ScoreBoardEntry>) iterator.next();
-			
+			Map.Entry<String, ScoreBoardEntry> entry = (Map.Entry<String, ScoreBoardEntry>) iterator
+					.next();
+
 			s += entry.getKey() + " --> ";
 			ScoreBoardEntry scoreEntry = entry.getValue();
-			s += scoreEntry.isBusy() + " -- " + scoreEntry.getOperation() + " -- " + scoreEntry.getVj() + " -- " + scoreEntry.getVk() + " -- "
-					+ scoreEntry.getQj() + " -- " + scoreEntry.getQk() + " -- " + scoreEntry.getDestination() + " -- " + scoreEntry.getA() + "\n";
+			s += scoreEntry.isBusy() + " -- " + scoreEntry.getOperation()
+					+ " -- " + scoreEntry.getVj() + " -- " + scoreEntry.getVk()
+					+ " -- " + scoreEntry.getQj() + " -- " + scoreEntry.getQk()
+					+ " -- " + scoreEntry.getDestination() + " -- "
+					+ scoreEntry.getA() + "\n";
 		}
-		
-	
+
 		return s;
 	}
-	
+
 }

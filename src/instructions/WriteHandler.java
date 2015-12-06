@@ -1,8 +1,10 @@
 package instructions;
 
+import Superscalar.ExecuteCycles;
 import Superscalar.ScoreBoardEntry;
 import Superscalar.StageInstruction;
 import Superscalar.SuperScalar;
+import Superscalar.WriteCycles;
 
 public class WriteHandler {
 
@@ -25,7 +27,8 @@ public class WriteHandler {
 		case "lw":
 			return handleLoad();
 		case "sw":
-			return handleStore();
+			return (instr.getCycles() == WriteCycles.getSTORE() ? handleStore()
+					: instr);
 		case "jmp":
 			return handleJump();
 		case "jalr":

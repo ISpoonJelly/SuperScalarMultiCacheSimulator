@@ -126,6 +126,7 @@ public class SuperScalar {
 					StageInstruction stageInstr = instr[i];
 					System.out.println(stageInstr.instruction + "Stage");
 					executeReg.getStageInstructions().put(ind, null);
+					stageInstr.setCycles(writeCycles.getWriteCycles(stageInstr.getInstruction()));
 					writeReg.getStageInstructions().put(ind, stageInstr);
 					System.out.println("FIND INDEX " + ind + "  " + stageInstr.instruction);
 
@@ -155,9 +156,10 @@ public class SuperScalar {
 			if (writeHandler.decode(first)!=null) {
 				first.cycles--;
 				if (first.cycles == 0) {
-					writeReg.getStageInstructions().put(writeReg.findIndex(instr[i]), null);
+					Integer ind = writeReg.findIndex(instr[i]);
+					writeReg.getStageInstructions().put(ind, null);
 					first.setCycles(1);
-					commitReg.getStageInstructions().put(writeReg.findIndex(instr[i]), first);
+					commitReg.getStageInstructions().put(ind, first);
 				}
 			}
 		}
