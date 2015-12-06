@@ -1,9 +1,11 @@
 package Superscalar;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class StageRegister {
-	private HashMap<Integer, StageInstruction> stageInstructions;
+	private HashMap<Integer, StageInstruction> stageInstructions = new HashMap<>();
 	private int size;
 
 	public StageRegister(int numInstructions) {
@@ -59,15 +61,38 @@ public class StageRegister {
 
 	}
 	
+	
+	// Revise 
 	public int findIndex(StageInstruction stageInstr){
 		int index = -1;
 		for(int i = 0; i<size; i++){
 			if(stageInstructions.get(i).getScoreKey().equals(stageInstr.getScoreKey())){
 				index = i;
+				break;
 			}
 		}
 		
 		return index;
+	}
+	
+	public String toString() {
+		String s = "";
+		
+		Iterator<Map.Entry<Integer, StageInstruction>> iterator = stageInstructions.entrySet().iterator();
+		
+		while (iterator.hasNext()) {
+			Map.Entry<Integer, StageInstruction> entry = (Map.Entry<Integer, StageInstruction>) iterator.next();
+			
+			s += entry.getKey() + " --> ";
+			StageInstruction instruction = entry.getValue();
+			if (instruction!=null) {
+				s += "instruction: " + instruction.instruction + "\ncycles: " + instruction.getCycles() + "\nscoreKey: " + instruction.scoreKey
+						+ "\nstalled: " + instruction.stalled + "\n";
+			}
+		}
+			
+		
+		return s;
 	}
 
 }

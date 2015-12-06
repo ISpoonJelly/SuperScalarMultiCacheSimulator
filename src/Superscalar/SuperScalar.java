@@ -1,5 +1,7 @@
 package Superscalar;
 
+import java.util.HashMap;
+
 import cache.CacheHandler;
 import instructions.CommitHandler;
 import instructions.ExecuteHandler;
@@ -35,6 +37,7 @@ public class SuperScalar {
 	public static ExecuteCycles execCycles = new ExecuteCycles();
 	public static IssueCycles issueCycles = new IssueCycles();
 	public static WriteCycles writeCycles = new WriteCycles();
+	
 
 	public SuperScalar(int n, int sn) {
 		issueReg = new StageRegister(n);
@@ -44,27 +47,40 @@ public class SuperScalar {
 		superNumber = sn;
 	}
 
-	public void fetch() {
-
+	public void fetch(String[] instructions) {
+		HashMap<Integer, StageInstruction> temp = new HashMap<Integer, StageInstruction>(); 
+		for (int i=0; i<instructions.length; i++) 
+			temp.put(i, new StageInstruction(instructions[i], false, 1));	// We have to identify the number of cycles
+		issueReg.setStageInstructions(temp);
 	}
 
+	
+	// Revise 
 	public void issue() {
 		// Don't issue if jump or return were detected!
+		
+		//System.out.println(issueReg);
 		
 		if (!SuperScalar.jumpFound && !SuperScalar.returnFound) {
 			for (int i = 0; i < superNumber; i++) {
 				StageInstruction first = issueReg.returnFirst();
+
+				System.out.println(first.instruction);
 				if (first != null) {
-					if (issueHandler.decode(first, first.cycles) != null) {
-						first.cycles--;
-						if (first.cycles == 0) {
+					
+					StageInstruction inst = issueHandler.decode(first, first.cycles);
+					if (inst != null) {
+						inst.cycles--;
+						if (inst.cycles == 0) {
 							issueReg.getStageInstructions().put(i, null);
-							first.setCycles(execCycles
-									.getExcuteCycles(issueHandler.decode(first,
-											first.cycles).getInstruction()));
+							inst.setCycles(execCycles
+									.getExcuteCycles(inst.getInstruction()));
 							executeReg.getStageInstructions().put(i,
-									issueHandler.decode(first, first.cycles));
+									inst);
 						}
+						System.out.println(issueReg);
+						System.out.println(executeReg);
+
 					}
 
 					else {
@@ -75,6 +91,7 @@ public class SuperScalar {
 				}
 			}
 		}
+		
 
 	}
 
@@ -91,13 +108,15 @@ public class SuperScalar {
 			Integer qj = SuperScalar.scoreboard.getScoreBoard().get(instr[i].getScoreKey()).getQj();
 			Integer qk = SuperScalar.scoreboard.getScoreBoard().get(instr[i].getScoreKey()).getQk();
 			if(qk == null && qj == null){
-			
-				executeHandler.decode(instr[i]);
+				if(execCycles.getExcuteCycles(instr[i].getInstruction()) == instr[i].cycles)
+					executeHandler.decode(instr[i]);
 				instr[i].cycles--;
+				
 				if(instr[i].cycles==0){
 					executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), null);
 					writeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), instr[i]);
 				}
+				executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), instr[i]);
 			}
 			else {
 				instr[i].setStalled(true);
@@ -149,5 +168,37 @@ public class SuperScalar {
 		}
 
 	}
+	
+	public String toString() {
+		
+		String s = "";
+		
+		s+="ScoreBoard\n";
+		s+="----------------------\n";
+		s+= scoreboard.toString();
+		s+= "---------------------\n";
+		
+		
+		
+		return s;
+	}
+	
+	public static void main(String[] args) {
+		
+		//first test
+		SuperScalar s = new SuperScalar(4, 3);
+		registerFile.setRegister("R2", 6);
+		registerFile.setRegister("R3", 4);
+		registerFile.setRegister("R5", 5);
+		ScoreBoard scoreBoard = new ScoreBoard(1, 1, 3, 1, 1, 1);
+		scoreboard = scoreBoard;
+		rob = new ROB(3);
+		String[] instructions = {"add R1 R2 R3", "sub R6 R5 R3", "mul R1 R5 R3", "add R7 R1 R2"};
+		s.fetch(instructions);
+		s.issue();
+		System.out.println(s);
+	}
 
 }
+
+

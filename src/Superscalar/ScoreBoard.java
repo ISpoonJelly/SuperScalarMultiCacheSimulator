@@ -1,6 +1,8 @@
 package Superscalar;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ScoreBoard {
 
@@ -8,7 +10,6 @@ public class ScoreBoard {
 	private int store;
 	private int add;
 	private int mult;
-	private int branch;
 	private int jump;
 	private int ret;
 	private int nand;
@@ -22,13 +23,12 @@ public class ScoreBoard {
 		scoreBoard.put(fu, null);
 	}
 
-	public ScoreBoard(int load, int store, int add, int mult, int branch,
+	public ScoreBoard(int load, int store, int add, int mult,
 			int jump, int ret) {
 		this.load = load;
 		this.store = store;
 		this.add = add;
 		this.mult = mult;
-		this.branch = branch;
 		this.jump = jump;
 		this.ret = ret;
 
@@ -64,13 +64,6 @@ public class ScoreBoard {
 		// mult reservation stations
 		for (int i = 1; i <= mult; i++) {
 			String l = "mult" + i;
-			scoreBoard.put(l, new ScoreBoardEntry(false, null, "", "", null,
-					null, null, 0));
-		}
-
-		// branch reservation stations
-		for (int i = 1; i <= branch; i++) {
-			String l = "branch" + i;
 			scoreBoard.put(l, new ScoreBoardEntry(false, null, "", "", null,
 					null, null, 0));
 		}
@@ -150,14 +143,6 @@ public class ScoreBoard {
 
 	public void setMult(int mult) {
 		this.mult = mult;
-	}
-
-	public int getBranch() {
-		return branch;
-	}
-
-	public void setBranch(int branch) {
-		this.branch = branch;
 	}
 
 	public HashMap<String, ScoreBoardEntry> getScoreBoard() {
@@ -246,18 +231,18 @@ public class ScoreBoard {
 			}
 		}
 
-		// branch reservation stations
-		for (int i = 1; i <= branch; i++) {
-			String l = "branch" + i;
-			if(scoreBoard.get(l).getQj() == rOBNum){
-				scoreBoard.get(l).setVj(result+"");
-				scoreBoard.get(l).setQj(null);
-			}
-			if(scoreBoard.get(l).getQk() == rOBNum){
-				scoreBoard.get(l).setVk(result+"");
-				scoreBoard.get(l).setQk(null);
-			}
-		}
+//		// branch reservation stations
+//		for (int i = 1; i <= branch; i++) {
+//			String l = "branch" + i;
+//			if(scoreBoard.get(l).getQj() == rOBNum){
+//				scoreBoard.get(l).setVj(result+"");
+//				scoreBoard.get(l).setQj(null);
+//			}
+//			if(scoreBoard.get(l).getQk() == rOBNum){
+//				scoreBoard.get(l).setVk(result+"");
+//				scoreBoard.get(l).setQk(null);
+//			}
+//		}
 
 		// jump reservation stations
 		for (int i = 1; i <= jump; i++) {
@@ -296,6 +281,24 @@ public class ScoreBoard {
 				scoreBoard.get(l).setQk(null);
 			}
 		}
+	}
+	
+	public String toString() {
+		String s = "Functional Unit --> busy -- operation -- vj -- vk -- qj -- qk -- destination -- a\n";
+		
+		Iterator<Map.Entry<String, ScoreBoardEntry>> iterator = scoreBoard.entrySet().iterator();
+		
+		while (iterator.hasNext()) {
+			Map.Entry<String, ScoreBoardEntry> entry = (Map.Entry<String, ScoreBoardEntry>) iterator.next();
+			
+			s += entry.getKey() + " --> ";
+			ScoreBoardEntry scoreEntry = entry.getValue();
+			s += scoreEntry.isBusy() + " -- " + scoreEntry.getOperation() + " -- " + scoreEntry.getVj() + " -- " + scoreEntry.getVk() + " -- "
+					+ scoreEntry.getQj() + " -- " + scoreEntry.getQk() + " -- " + scoreEntry.getA() + "\n";
+		}
+		
+	
+		return s;
 	}
 	
 }
