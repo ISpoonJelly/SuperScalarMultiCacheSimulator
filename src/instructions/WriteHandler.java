@@ -16,6 +16,7 @@ public class WriteHandler {
 	public StageInstruction decode(StageInstruction instr) {
 		String instruction = instr.getInstruction();
 		list = instruction.split(" ");
+		stageInstr = instr;
 		String op = list[0];
 
 		switch (op) {
@@ -115,6 +116,8 @@ public class WriteHandler {
 
 	// sub regA, regB, regC
 	public StageInstruction handleSub() {
+
+		System.out.println(stageInstr + "BLA BLA");
 
 		String vj = stageInstr.getScoreEntry().getVj();
 		String vk = stageInstr.getScoreEntry().getVk();

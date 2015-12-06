@@ -122,11 +122,15 @@ public class SuperScalar {
 				instr[i].cycles--;
 				
 				if(instr[i].cycles==0){
-					executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), null);
-					writeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), instr[i]);
-					System.out.println("FIND INDEX " + executeReg.findIndex(instr[i]));
+					Integer ind = executeReg.findIndex(instr[i]);
+					StageInstruction stageInstr = instr[i];
+					System.out.println(stageInstr.instruction + "Stage");
+					executeReg.getStageInstructions().put(ind, null);
+					writeReg.getStageInstructions().put(ind, stageInstr);
+					System.out.println("FIND INDEX " + ind + "  " + stageInstr.instruction);
+
 				}
-				executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), instr[i]);
+				//executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), instr[i]);
 				
 			}
 			else {

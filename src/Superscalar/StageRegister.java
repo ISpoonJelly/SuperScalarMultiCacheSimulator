@@ -67,11 +67,12 @@ public class StageRegister {
 		int index = -1;
 		for(int i = 0; i<size; i++){
 			System.out.println(stageInstructions.get(i) + " TEST");
-			if(stageInstructions.get(i)!=null)
+			if(stageInstructions.get(i)!=null){
 			if(stageInstructions.get(i).getScoreKey().equals(stageInstr.getScoreKey())){
 				index = i;
 				
 				break;
+			}
 			}
 		}
 		
