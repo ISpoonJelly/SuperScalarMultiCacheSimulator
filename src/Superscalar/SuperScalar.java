@@ -11,7 +11,7 @@ import instructions.WriteHandler;
 public class SuperScalar {
 
 	// Give stageRegisters size of instructions
-	public static AfterBranchInstrRegister afterBranchInstr;
+	public static AfterBranchInstrRegister afterBranchInstr = new AfterBranchInstrRegister(3);
 	public static StageRegister issueReg;
 	public static StageRegister executeReg;
 	public static StageRegister writeReg;
@@ -214,6 +214,7 @@ public class SuperScalar {
 		scoreboard = scoreBoard;
 		rob = new ROB(4);
 		String[] instructions = {"sub R5 R5 R3", "mul R1 R5 R3", "lw R1 R2 1"};
+		//String[] instructions = {"add R5 R5 R3", "beq R2 R3 -1", "nand R1 R2 R3"};
 		s.fetch(instructions);
 		s.issue();
 		
@@ -223,6 +224,8 @@ public class SuperScalar {
 		s.execute();
 		System.out.println(s);
 		s.write();
+		System.out.println(s);
+		s.commit();
 		System.out.println(s);
 	}
 
