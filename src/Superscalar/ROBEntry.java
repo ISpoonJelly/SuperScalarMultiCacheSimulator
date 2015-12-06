@@ -2,14 +2,14 @@ package Superscalar;
 
 
 public class ROBEntry {
-	int id;
+	//int id;
 	String type;
 	Integer value;
 	String dest;
 	boolean ready;
 	
 	public ROBEntry(String type, String dest, Integer value, boolean ready) {
-		this.id = id;
+		//this.id = id;
 		this.type = type;
 		this.dest = dest;
 		this.value = value;
@@ -17,12 +17,12 @@ public class ROBEntry {
 	}
 	
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+//	public int getId() {
+//		return id;
+//	}
+//	public void setId(int id) {
+//		this.id = id;
+//	}
 	public String getType() {
 		return type;
 	}
@@ -46,6 +46,12 @@ public class ROBEntry {
 	}
 	public void setReady(boolean ready) {
 		this.ready = ready;
+	}
+	
+	public String toString() {
+		String s = type + " -- " + dest + " -- " + value + " -- " + ready;
+		
+		return s;
 	}
 	
 	

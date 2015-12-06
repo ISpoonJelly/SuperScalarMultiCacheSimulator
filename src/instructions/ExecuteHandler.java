@@ -22,9 +22,11 @@ public class ExecuteHandler {
 		case "add":
 			return true;
 		case "lw":
-			return true;
+			return (instruction.getCycles() == ExecuteCycles.getLOAD() ? handleLoad()
+					: true);
 		case "sw":
-			return true;
+			return (instruction.getCycles() == ExecuteCycles.getSTORE() ? handleStore()
+					: true);
 		case "jmp":
 			return (instruction.getCycles() == ExecuteCycles.getJUMP() ? handleJump()
 					: true);
@@ -60,6 +62,75 @@ public class ExecuteHandler {
 	 * there are in the form of Rx or Integers - I fixed the jumps and return
 	 * for this check
 	 */
+
+	private boolean handleStore() {
+		String vj, vk;
+		Integer qj, qk;
+		/*if (SuperScalar.registerStatus.registerAvailable(list[2])) {
+			vj = list[2];
+			qj = null;
+		} else {
+			qj = SuperScalar.registerStatus.registerROBNum(list[2]);
+			vj = null;
+		}
+		if (SuperScalar.registerStatus.registerAvailable(list[1])) {
+			vk = list[1];
+			qk = null;
+		} else {
+			qk = SuperScalar.registerStatus.registerROBNum(list[1]);
+			vk = null;
+		}*/
+		 vk = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getVk();
+		// qk =  SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getQk();
+		if (vk != null) {
+			String regB = vk;
+			int result;
+			if (regB.charAt(0) == 'R') {
+				result = SuperScalar.registerFile.getRegister(regB);
+			} else {
+				result = Integer.parseInt(regB);
+			}
+			int addr = Integer.parseInt(list[3]);
+			SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).setA(result+addr);
+			
+			/*SuperScalar.scoreboard.calculateAddress(vj, "", vk, qk,
+					"store", Integer.parseInt(list[3]),
+					SuperScalar.scoreboard.getStore());*/
+			// return true
+			return true;
+		} else
+			return false;
+	}
+
+	private boolean handleLoad() {
+		String vj = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getVj();
+		Integer qj =  SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getQj();
+		if (SuperScalar.registerStatus.registerAvailable(list[2])) {
+			vj = list[2];
+			qj = null;
+		} else {
+			qj = SuperScalar.registerStatus.registerROBNum(list[2]);
+			vj = null;
+		}
+		if (vj != null) {
+			String regB = vj;
+			int result;
+			if (regB.charAt(0) == 'R') {
+				result = SuperScalar.registerFile.getRegister(regB);
+			} else {
+				result = Integer.parseInt(regB);
+			}
+			int addr = Integer.parseInt(list[3]);
+			SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).setA(result+addr);
+			/*SuperScalar.scoreboard.calculateAddress(vj, "", null, null,
+					"load", Integer.parseInt(list[3]),
+					SuperScalar.scoreboard.getLoad());*/
+			// true
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	// beq regA, regB, imm
 	public boolean handleBranch() {

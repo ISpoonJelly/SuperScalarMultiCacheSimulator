@@ -3,7 +3,8 @@ package Superscalar;
 public class WriteCycles {
 	public int STORE = 2;
 	
-	public WriteCycles(){
+	public WriteCycles(int store){
+		STORE = store;
 		
 	}
 	

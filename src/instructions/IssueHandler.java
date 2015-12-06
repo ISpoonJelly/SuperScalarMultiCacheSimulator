@@ -99,6 +99,7 @@ public class IssueHandler {
 		}
 		
 		int dest = SuperScalar.rob.getTail();
+		
 		String vj, vk;
 		Integer qj, qk;
 
@@ -266,17 +267,22 @@ public class IssueHandler {
 
 	// nand regA, regB, regC
 	public StageInstruction handleNand() {
+		System.out.println("HEREE !! ");
 		if (!freeROB()) {
 			return null;
 		}
+		System.out.println("FREE ROB HEREE!!");
 
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("nand",
 				SuperScalar.scoreboard.getNand());
+		System.out.println(fu + " FUNAND");
 		if (fu == -1) {
 			return null;
 		}
+	
 
 		int dest = SuperScalar.rob.getTail();
+		System.out.println(dest + " NAND DES");
 		String vj, vk;
 		Integer qj, qk;
 		if (SuperScalar.registerStatus.registerAvailable(list[2])) {
@@ -460,7 +466,7 @@ public class IssueHandler {
 
 	// sw regA, regB, imm
 	public StageInstruction handleStore(int cycles) {
-		if (cycles == 2) {
+		
 			if (!freeROB()) {
 				return null;
 			}
@@ -506,49 +512,12 @@ public class IssueHandler {
 			return stageInstr;
 			
 			// calculating address
-		} else {
-			String vj, vk;
-			Integer qj, qk;
-			/*if (SuperScalar.registerStatus.registerAvailable(list[2])) {
-				vj = list[2];
-				qj = null;
-			} else {
-				qj = SuperScalar.registerStatus.registerROBNum(list[2]);
-				vj = null;
-			}
-			if (SuperScalar.registerStatus.registerAvailable(list[1])) {
-				vk = list[1];
-				qk = null;
-			} else {
-				qk = SuperScalar.registerStatus.registerROBNum(list[1]);
-				vk = null;
-			}*/
-			 vk = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getVk();
-			// qk =  SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getQk();
-			if (vk != null) {
-				String regB = vk;
-				int result;
-				if (regB.charAt(0) == 'R') {
-					result = SuperScalar.registerFile.getRegister(regB);
-				} else {
-					result = Integer.parseInt(regB);
-				}
-				int addr = Integer.parseInt(list[3]);
-				SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).setA(result+addr);
-				
-				/*SuperScalar.scoreboard.calculateAddress(vj, "", vk, qk,
-						"store", Integer.parseInt(list[3]),
-						SuperScalar.scoreboard.getStore());*/
-				// return true
-				return stageInstr;
-			} else
-				return null;
-		}
+	
 	}
 
 	// lw regA, regB, imm
 	public StageInstruction handleLoad(int cycle) {
-		if (cycle == 2) {
+		//if (cycle == 2) {
 			if (!freeROB()) {
 				return null;
 			}
@@ -585,10 +554,12 @@ public class IssueHandler {
 			
 			return stageInstr;
 			
+			
 			// calculating address
-		} else if(cycle == 1) {
-			String vj = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getVj();
-			Integer qj =  SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getQj();
+		//} /*else if(cycle == 1) {
+			//System.out.println("MINUS");
+			//String vj = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getVj();
+			//Integer qj =  SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getQj();
 			/*if (SuperScalar.registerStatus.registerAvailable(list[2])) {
 				vj = list[2];
 				qj = null;
@@ -596,7 +567,7 @@ public class IssueHandler {
 				qj = SuperScalar.registerStatus.registerROBNum(list[2]);
 				vj = null;
 			}*/
-			if (vj != null) {
+			/*if (vj != null) {
 				String regB = vj;
 				int result;
 				if (regB.charAt(0) == 'R') {
@@ -610,12 +581,11 @@ public class IssueHandler {
 						"load", Integer.parseInt(list[3]),
 						SuperScalar.scoreboard.getLoad());*/
 				// true
-				return stageInstr;
+			/*	return stageInstr;
 			} else {
 				return null;
 			}
-		}
-		return null;
+		}*/
 	}
 
 	// add regA, regB, regC
@@ -630,6 +600,7 @@ public class IssueHandler {
 		}
 
 		int dest = SuperScalar.rob.getTail();
+		System.out.println(dest + " DESTINATION");
 		String vj, vk;
 		Integer qj, qk;
 		if (SuperScalar.registerStatus.registerAvailable(list[2])) {

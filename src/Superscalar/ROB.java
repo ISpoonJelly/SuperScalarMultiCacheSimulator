@@ -1,5 +1,8 @@
 package Superscalar;
 
+import java.util.Iterator;
+import java.util.Map;
+
 public class ROB {
 	ROBEntry[] rob;
 	int head, tail, entriesCount;
@@ -42,7 +45,7 @@ public class ROB {
 			rob[tail] = entry;
 			tail++;
 			entriesCount++;
-			if ( (tail == rob.length-1)) 
+			if ((tail == rob.length))
 				tail = 1;
 			return true;
 		}
@@ -95,6 +98,27 @@ public class ROB {
 	
 	public ROBEntry getEntry(int index) {
 		return rob[index];
+	}
+	
+	public String toString() {
+		String s = "Head -- Tail -- Id -- type -- destination -- value -- ready\n";
+		
+		for (int i =1; i < rob.length; i++) {
+			if (head == i) {
+				s+= "Head ";
+			}
+			
+			if (tail == i) {
+				s+= "Tail -- ";
+			}
+			if (rob[i] != null)
+				s += rob[i].toString() + "\n";
+			else 
+				s += "---EMPTY--- \n";
+		}
+		
+	
+		return s;
 	}
 	
 	

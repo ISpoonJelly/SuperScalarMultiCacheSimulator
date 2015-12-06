@@ -24,13 +24,14 @@ public class ScoreBoard {
 	}
 
 	public ScoreBoard(int load, int store, int add, int mult,
-			int jump, int ret) {
+			int jump, int ret, int nand) {
 		this.load = load;
 		this.store = store;
 		this.add = add;
 		this.mult = mult;
 		this.jump = jump;
 		this.ret = ret;
+		this.nand = nand;
 
 		initialize();
 
@@ -82,7 +83,7 @@ public class ScoreBoard {
 					null, null, 0));
 		}
 		// nand reservation stations
-		for (int i = 1; i <= ret; i++) {
+		for (int i = 1; i <= nand; i++) {
 			String l = "nand" + i;
 			scoreBoard.put(l, new ScoreBoardEntry(false, null, "", "", null,
 					null, null, 0));
@@ -294,7 +295,7 @@ public class ScoreBoard {
 			s += entry.getKey() + " --> ";
 			ScoreBoardEntry scoreEntry = entry.getValue();
 			s += scoreEntry.isBusy() + " -- " + scoreEntry.getOperation() + " -- " + scoreEntry.getVj() + " -- " + scoreEntry.getVk() + " -- "
-					+ scoreEntry.getQj() + " -- " + scoreEntry.getQk() + " -- " + scoreEntry.getA() + "\n";
+					+ scoreEntry.getQj() + " -- " + scoreEntry.getQk() + " -- " + scoreEntry.getDestination() + " -- " + scoreEntry.getA() + "\n";
 		}
 		
 	
