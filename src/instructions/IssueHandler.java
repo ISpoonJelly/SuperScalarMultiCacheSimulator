@@ -430,6 +430,7 @@ public class IssueHandler {
 		}
 
 		SuperScalar.jumpFound = true;
+		System.out.println("JUMP SET");
 		// updating the PC
 		//SuperScalar.PC += SuperScalar.registerFile.getRegister(list[1])
 				//+ Integer.parseInt(list[2]);

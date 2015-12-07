@@ -8,14 +8,20 @@ public class StageRegister {
 	private HashMap<Integer, StageInstruction> stageInstructions = new HashMap<>();
 	private int size;
 
-	public StageRegister(int numInstructions) {
-		for (int i = 0; i < numInstructions; i++) {
+	public StageRegister() {
+		for (int i = 0; i < 1000; i++) {
 			stageInstructions.put(i, null);
 		}
-		size = numInstructions;
+		
 	}
 
 	public int getSize(){
+		int size =0;
+		for(int i = 0; i<1000; i++){
+			if(stageInstructions.get(i) != null){
+				size++;
+			}
+		}
 		return size;
 	}
 	
@@ -29,7 +35,7 @@ public class StageRegister {
 	}
 
 	public StageInstruction returnFirst() {
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < 1000; i++) {
 			if (stageInstructions.get(i) != null) {
 				return stageInstructions.get(i);
 			}
@@ -40,7 +46,7 @@ public class StageRegister {
 
 	public int numOfInstructions() {
 		int count = 0;
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < 1000; i++) {
 			if (stageInstructions.get(i) != null) {
 				count++;
 			}
@@ -52,7 +58,7 @@ public class StageRegister {
 		StageInstruction[] array = new StageInstruction[this
 				.numOfInstructions()];
 		int count = 0;
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < 1000; i++) {
 			if (stageInstructions.get(i) != null) {
 				array[count++] = stageInstructions.get(i);
 			}
@@ -65,8 +71,7 @@ public class StageRegister {
 	// Revise 
 	public int findIndex(StageInstruction stageInstr){
 		int index = -1;
-		for(int i = 0; i<size; i++){
-			System.out.println(stageInstructions.get(i) + " TEST");
+		for(int i = 0; i<1; i++){
 			if(stageInstructions.get(i)!=null){
 			if(stageInstructions.get(i).getScoreKey().equals(stageInstr.getScoreKey())){
 				index = i;
