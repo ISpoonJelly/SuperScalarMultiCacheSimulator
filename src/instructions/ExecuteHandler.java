@@ -180,6 +180,22 @@ public class ExecuteHandler {
 					String scoreKey = SuperScalar.afterBranchInstr
 							.getStageInstructions()[i].getScoreKey();
 					SuperScalar.scoreboard.deleteEntry(scoreKey);
+					if(SuperScalar.issueReg.findIndex(SuperScalar.afterBranchInstr
+							.getStageInstructions()[i]) != -1)
+					SuperScalar.issueReg.getStageInstructions().put(SuperScalar.issueReg.findIndex(SuperScalar.afterBranchInstr
+							.getStageInstructions()[i]), null);
+					if(SuperScalar.executeReg.findIndex(SuperScalar.afterBranchInstr
+							.getStageInstructions()[i]) != -1)
+					SuperScalar.executeReg.getStageInstructions().put(SuperScalar.executeReg.findIndex(SuperScalar.afterBranchInstr
+							.getStageInstructions()[i]), null);
+					if(SuperScalar.writeReg.findIndex(SuperScalar.afterBranchInstr
+							.getStageInstructions()[i]) != -1)
+					SuperScalar.writeReg.getStageInstructions().put(SuperScalar.writeReg.findIndex(SuperScalar.afterBranchInstr
+							.getStageInstructions()[i]), null);
+					if(SuperScalar.commitReg.findIndex(SuperScalar.afterBranchInstr
+							.getStageInstructions()[i]) != -1)
+					SuperScalar.commitReg.getStageInstructions().put(SuperScalar.commitReg.findIndex(SuperScalar.afterBranchInstr
+							.getStageInstructions()[i]), null);
 				}
 			}
 

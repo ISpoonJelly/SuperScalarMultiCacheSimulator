@@ -265,7 +265,14 @@ public class WriteHandler {
 				.get(stageInstr.getScoreKey()).getDestination();
 		// get PC+1 stored when issued in vj
 		int result = Integer.parseInt(SuperScalar.scoreboard.getScoreBoard()
-				.get(stageInstr.getScoreEntry()).getVj());
+				.get(stageInstr.getScoreKey()).getVj());
+		String vk = SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getVk();
+		if(vk.charAt(0) == 'R'){
+		SuperScalar.PC = SuperScalar.registerFile.getRegister(vk);
+		}
+		else {
+			SuperScalar.PC = Integer.parseInt(vk);
+		}
 		SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
 		SuperScalar.rob.setValue(ROBNum, result);
@@ -290,10 +297,12 @@ public class WriteHandler {
 			regA = Integer.parseInt(vj);
 		}
 		
+		//System.out.println(SuperScalar.scoreboard.getScoreBoard().get(stageInstr.getScoreKey()).getVk());
 		int result = regA
 				+ Integer.parseInt(SuperScalar.scoreboard.getScoreBoard()
-						.get(stageInstr.getScoreEntry()).getVk())
+						.get(stageInstr.getScoreKey()).getVk())
 						;
+		SuperScalar.PC = result;
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
 		SuperScalar.scoreboard.getScoreBoard().put(stageInstr.getScoreKey(),

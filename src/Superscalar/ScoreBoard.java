@@ -20,7 +20,8 @@ public class ScoreBoard {
 	}
 
 	public void deleteEntry(String fu) {
-		scoreBoard.put(fu, null);
+		scoreBoard.put(fu, new ScoreBoardEntry(false, null, "", "", null,
+				null, null, 0));
 	}
 
 	public ScoreBoard(int load, int store, int add, int mult, int jump,
@@ -182,54 +183,60 @@ public class ScoreBoard {
 		// loadt reservation stations
 		for (int i = 1; i <= load; i++) {
 			String l = "load" + i;
-				if (scoreBoard.get(l).getQj() != null && scoreBoard.get(l).getQj() == rOBNum) {
-					scoreBoard.get(l).setVj(result + "");
-					scoreBoard.get(l).setQj(null);
-				}
-				if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
-					scoreBoard.get(l).setVk(result + "");
-					scoreBoard.get(l).setQk(null);
-				}
+			if (scoreBoard.get(l).getQj() != null
+					&& scoreBoard.get(l).getQj() == rOBNum) {
+				scoreBoard.get(l).setVj(result + "");
+				scoreBoard.get(l).setQj(null);
 			}
-		
+			if (scoreBoard.get(l).getQk() != null
+					&& scoreBoard.get(l).getQk() == rOBNum) {
+				scoreBoard.get(l).setVk(result + "");
+				scoreBoard.get(l).setQk(null);
+			}
+		}
 
 		// store reservation stations
 		for (int i = 1; i <= store; i++) {
 			String l = "store" + i;
-			
-				if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
-					scoreBoard.get(l).setVj(result + "");
-					scoreBoard.get(l).setQj(null);
-				}
-				if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
-					scoreBoard.get(l).setVk(result + "");
-					scoreBoard.get(l).setQk(null);
-				}
+
+			if (scoreBoard.get(l).getQj() != null
+					&& scoreBoard.get(l).getQj() == rOBNum) {
+				scoreBoard.get(l).setVj(result + "");
+				scoreBoard.get(l).setQj(null);
 			}
-		
+			if (scoreBoard.get(l).getQk() != null
+					&& scoreBoard.get(l).getQk() == rOBNum) {
+				scoreBoard.get(l).setVk(result + "");
+				scoreBoard.get(l).setQk(null);
+			}
+		}
+
 		// add reservation stations
 		for (int i = 1; i <= add; i++) {
 
 			String l = "add" + i;
-				if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
-					scoreBoard.get(l).setVj(result + "");
-					scoreBoard.get(l).setQj(null);
-				}
-				if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
-					scoreBoard.get(l).setVk(result + "");
-					scoreBoard.get(l).setQk(null);
-				}
+			if (scoreBoard.get(l).getQj() != null
+					&& scoreBoard.get(l).getQj() == rOBNum) {
+				scoreBoard.get(l).setVj(result + "");
+				scoreBoard.get(l).setQj(null);
 			}
-		
+			if (scoreBoard.get(l).getQk() != null
+					&& scoreBoard.get(l).getQk() == rOBNum) {
+				scoreBoard.get(l).setVk(result + "");
+				scoreBoard.get(l).setQk(null);
+			}
+		}
 
 		// mult reservation stations
 		for (int i = 1; i <= mult; i++) {
 			String l = "mult" + i;
-			if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+			if (scoreBoard.get(l).getQj() != null
+					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
 			}
-			if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+			if (scoreBoard.get(l).getQk() != null
+					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
 			}
@@ -251,11 +258,13 @@ public class ScoreBoard {
 		// jump reservation stations
 		for (int i = 1; i <= jump; i++) {
 			String l = "jump" + i;
-			if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+			if (scoreBoard.get(l).getQj() != null
+					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
 			}
-			if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+			if (scoreBoard.get(l).getQk() != null
+					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
 			}
@@ -264,11 +273,13 @@ public class ScoreBoard {
 		// return reservation stations
 		for (int i = 1; i <= ret; i++) {
 			String l = "ret" + i;
-			if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+			if (scoreBoard.get(l).getQj() != null
+					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
 			}
-			if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+			if (scoreBoard.get(l).getQk() != null
+					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
 			}
@@ -276,11 +287,13 @@ public class ScoreBoard {
 		// nand reservation stations
 		for (int i = 1; i <= nand; i++) {
 			String l = "nand" + i;
-			if (scoreBoard.get(l).getQj()!= null && scoreBoard.get(l).getQj() == rOBNum) {
+			if (scoreBoard.get(l).getQj() != null
+					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
 			}
-			if (scoreBoard.get(l).getQk()!= null && scoreBoard.get(l).getQk() == rOBNum) {
+			if (scoreBoard.get(l).getQk() != null
+					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
 			}
@@ -299,11 +312,16 @@ public class ScoreBoard {
 
 			s += entry.getKey() + " --> ";
 			ScoreBoardEntry scoreEntry = entry.getValue();
-			s += scoreEntry.isBusy() + " -- " + scoreEntry.getOperation()
-					+ " -- " + scoreEntry.getVj() + " -- " + scoreEntry.getVk()
-					+ " -- " + scoreEntry.getQj() + " -- " + scoreEntry.getQk()
-					+ " -- " + scoreEntry.getDestination() + " -- "
-					+ scoreEntry.getA() + "\n";
+			if (scoreEntry != null) {
+				s += scoreEntry.isBusy() + " -- " + scoreEntry.getOperation()
+						+ " -- " + scoreEntry.getVj() + " -- "
+						+ scoreEntry.getVk() + " -- " + scoreEntry.getQj()
+						+ " -- " + scoreEntry.getQk() + " -- "
+						+ scoreEntry.getDestination() + " -- "
+						+ scoreEntry.getA() + "\n";
+			} else {
+				s+=" EMPTY \n";
+			}
 		}
 
 		return s;
