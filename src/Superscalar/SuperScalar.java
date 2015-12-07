@@ -23,6 +23,8 @@ public class SuperScalar {
 	public static int PCBranchNotTaken = 0;
 	public static int branchImm = 0;
 	public static int superNumber;
+	public static int numberOfBranches = 0;
+	public static int mispredictedBranches = 0;
 	// to be changed according to rob size
 	public static ROB rob = new ROB(4);
 	public static RegisterFile registerFile = new RegisterFile();
@@ -33,7 +35,7 @@ public class SuperScalar {
 	public static WriteHandler writeHandler = new WriteHandler();
 	public static CommitHandler commitHandler = new CommitHandler();
 	public static CacheHandler cacheHandler = new CacheHandler();
-	public static int PC;
+	public static int PC = 0;
 	public static ExecuteCycles execCycles = new ExecuteCycles(2, 1,2, 2, 1,
 			2, 5);
 	public static IssueCycles issueCycles = new IssueCycles();
@@ -50,13 +52,20 @@ public class SuperScalar {
 
 	public void fetch(String[] instructions) {
 		HashMap<Integer, StageInstruction> temp = new HashMap<Integer, StageInstruction>(); 
-		for (int i=0; i<instructions.length; i++) {
-			String[] list = instructions[i].split(" ");
+		int originalPC = PC;
+		for (int i=PC; i<Math.min(originalPC+superNumber,instructions.length); i++) {
+			String[] list = instructions[PC].split(" ");
 			
 				// We have to identify the number of cycles
-		 
-				temp.put(i, new StageInstruction(instructions[i], false, 1));
-			
+				temp.put(PC, new StageInstruction(instructions[PC], false, 1));
+				if(list[0].equals("beq")){
+					numberOfBranches++;
+					int imm = Integer.parseInt(list[3]);
+					if(imm < 0) PC = PC + imm;
+					else PC++;
+					System.out.println(PC + " -- PC");
+				}
+				else PC++;
 			issueReg.setStageInstructions(temp);
 
 		}
@@ -213,20 +222,29 @@ public class SuperScalar {
 		ScoreBoard scoreBoard = new ScoreBoard(1, 1, 3, 1, 1, 1,1);
 		scoreboard = scoreBoard;
 		rob = new ROB(4);
-		String[] instructions = {"sub R5 R5 R3", "mul R1 R5 R3", "lw R1 R2 1"};
-		//String[] instructions = {"add R5 R5 R3", "beq R2 R3 -1", "nand R1 R2 R3"};
+		
+		//String[] instructions = {"sub R5 R5 R3", "mul R1 R5 R3", "lw R1 R2 1"};
+		String[] instructions = {"mul R5 R5 R3", "beq R2 R3 -1", "nand R1 R2 R3"};
+		afterBranchInstr = new AfterBranchInstrRegister(instructions.length);
 		s.fetch(instructions);
 		s.issue();
-		
+		System.out.println(branchFound + " Branch Found");
+		System.out.println(afterBranchInstr);
 		System.out.println(s);
 		System.out.println("---------------------");
 		s.issue();
 		s.execute();
+		System.out.println(numberOfBranches + " -- " + mispredictedBranches + " Misprediction");
+		System.out.println(PC + " -- Afterbranch PC");
 		System.out.println(s);
 		s.write();
 		System.out.println(s);
 		s.commit();
 		System.out.println(s);
+		s.fetch(instructions);
+		s.issue();
+		System.out.println(s);
+		
 	}
 
 }

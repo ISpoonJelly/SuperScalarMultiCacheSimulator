@@ -26,6 +26,8 @@ public class AfterBranchInstrRegister {
 		
 	}
 	public int getSize () {
-		return current + 1; 
+		return current; 
 	}
+		
+	
 }

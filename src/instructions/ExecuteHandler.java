@@ -156,6 +156,7 @@ public class ExecuteHandler {
 		if (regA - regB == 0) {
 			if (SuperScalar.branchImm > 0) {
 				SuperScalar.PC = SuperScalar.PCBranchTaken;
+				SuperScalar.mispredictedBranches++;
 				for (int i = 0; i < SuperScalar.afterBranchInstr.getSize(); i++) {
 					int dest = SuperScalar.afterBranchInstr
 							.getStageInstructions()[i].getScoreEntry()
@@ -169,6 +170,7 @@ public class ExecuteHandler {
 		} else {
 			if (SuperScalar.branchImm < 0) {
 				SuperScalar.PC = SuperScalar.PCBranchNotTaken;
+				SuperScalar.mispredictedBranches++;
 				for (int i = 0; i < SuperScalar.afterBranchInstr.getSize(); i++) {
 
 					int dest = SuperScalar.afterBranchInstr

@@ -95,7 +95,7 @@ public class IssueHandler {
 		SuperScalar.PCBranchTaken = SuperScalar.PC + 1 + Integer.parseInt(list[3]);
 		
 		if (Integer.parseInt(list[3]) < 0) {
-			SuperScalar.PC += 1 + Integer.parseInt(list[3]);
+			//SuperScalar.PC += 1 + Integer.parseInt(list[3]);
 		}
 		
 		int dest = SuperScalar.rob.getTail();
