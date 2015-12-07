@@ -40,7 +40,7 @@ public class CommitHandler {
 			if (SuperScalar.rob.isReady(head)) {
 				Integer mem = instruction.getMemoryAddress();
 				Integer value = SuperScalar.rob.getEntry(head).getValue();
-				SuperScalar.cacheHandler.putData(mem.intValue(), value.intValue());
+				SuperScalar.cacheHandler.updateData(mem.intValue(), value.intValue());
 				SuperScalar.rob.commitEntry(head);
 			}
 			

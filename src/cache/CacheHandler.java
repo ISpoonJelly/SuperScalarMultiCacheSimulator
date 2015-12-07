@@ -11,14 +11,10 @@ public class CacheHandler {
 		
 	}
 	
-	public void putData(int memoryAddress, int value) {
-		
-	}
-	
-	public CacheHandler(int cacheNum, MainMemory memory, int cacheBlockSize){
+	public CacheHandler(int cacheNum, MainMemory memory, int cacheBlockSize, Cache[] caches){
 		CacheHandler.memory = memory;
-		this.cacheBlockSize = cacheBlockSize;
-		caches = new Cache[cacheNum];
+		CacheHandler.cacheBlockSize = cacheBlockSize;
+		CacheHandler.caches = caches;
 	}
 	
 	public String fetchInstruction(int address) {
@@ -108,8 +104,9 @@ public class CacheHandler {
 		if(level == 0) {
 			Address adr = new Address(address);
 			int offset = adr.getOffset(cacheBlockSize);
-			Integer dataValue = data[offset];
-			memory.addData(address, dataValue);
+			Integer value = data[offset];
+			
+			memory.addData(address, value);
 		}
 		caches[level - 1].addData(address, data);
 	}
@@ -169,6 +166,14 @@ public class CacheHandler {
 	public float getIPC(){
 		float CPI = getCPI();
 		return 1/CPI;
+	}
+	
+	public String toString() {
+		String s = "";
+		for (int i = 0; i < caches.length; i++) {
+			s += caches[i].toString();
+		}
+		return s;
 	}
 	
 }
