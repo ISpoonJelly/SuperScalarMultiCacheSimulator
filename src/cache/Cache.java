@@ -2,7 +2,7 @@ package cache;
 import java.util.HashMap;
 
 public class Cache {
-	private int level;
+	private int level, iHit, iMiss, dHit, dMiss;
 	private HashMap<Integer, ICacheEntry> iCache;
 	private HashMap<Integer, DCacheEntry> dCache;
 	private int blockNum, blockSize, assoc, setSize, accessTime;
@@ -23,6 +23,7 @@ public class Cache {
 		this.accessTime = accessTime;
 		this.writeBack = writeBack;
 		this.setSize = blockNum / assoc;
+		this.iHit = this.iMiss = this.dHit = this.dMiss = 0;
 	}
 
 	private void initializeCaches() {
@@ -65,9 +66,13 @@ public class Cache {
 		for (int i = set; i < set + setSize; i++) {
 			if(iCache.get(i) != null && iCache.get(i).getTag() == tag) {
 				entry = iCache.get(i);
+				iHit++;
 				break;
 			}
 		}
+		
+		if(entry == null)
+			iMiss++;
 		
 		return entry;
 	}
@@ -102,10 +107,6 @@ public class Cache {
 		
 		dCache.put(place, entry);
 	}
-	
-	public void updateData(int address, Integer data) {
-		
-	}
 
 	public DCacheEntry fetchData(int address) {
 		Address ad = new Address(address);
@@ -118,9 +119,13 @@ public class Cache {
 		for (int i = set; i < set + setSize; i++) {
 			if(dCache.get(i) != null && dCache.get(i).getTag() == tag) {
 				entry = dCache.get(i);
+				dHit++;
 				break;
 			}
 		}
+		
+		if(entry == null)
+			dMiss++;
 		
 		return entry;
 	}
@@ -129,6 +134,26 @@ public class Cache {
 		return writeBack;
 	}
 	
+	public int getiHit() {
+		return iHit;
+	}
+
+	public int getiMiss() {
+		return iMiss;
+	}
+
+	public int getdHit() {
+		return dHit;
+	}
+
+	public int getdMiss() {
+		return dMiss;
+	}
+
+	public int getAccessTime() {
+		return accessTime;
+	}
+
 	public String toString() {
 		String s = "";
 		s += "ICache: \n";

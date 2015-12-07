@@ -5,7 +5,7 @@ import mainMemory.MainMemory;
 public class CacheHandler {
 	private static MainMemory memory;
 	private static Cache[] caches;
-	private int cacheBlockSize;
+	private static int cacheBlockSize;
 	
 	public CacheHandler() {
 		
@@ -106,8 +106,69 @@ public class CacheHandler {
 	
 	public static void updateLowerLevels(int level, int address, Integer[] data) {
 		if(level == 0) {
-			//add data to memory
+			Address adr = new Address(address);
+			int offset = adr.getOffset(cacheBlockSize);
+			Integer dataValue = data[offset];
+			memory.addData(address, dataValue);
 		}
 		caches[level - 1].addData(address, data);
 	}
+	
+	public float getInstructionAMAT(){
+		float result = 0;
+		float missRate = 1;
+		for (int i = caches.length - 1; i >= -1 ; i--) {
+			float hitTime;
+			if(i == -1) {
+				hitTime = memory.getAccessTime();
+			} else {
+				hitTime = caches[i].getAccessTime();
+			}
+			result += hitTime * missRate;
+			if(i >= 0){
+				missRate *= caches[i].getiMiss() / (caches[i].getiHit() + caches[i].getiMiss());
+			}
+		}
+		return result;
+	}
+	
+	public float getDataAMAT(){
+		float result = 0;
+		float missRate = 1;
+		for (int i = caches.length - 1; i >= -1 ; i--) {
+			float hitTime;
+			if(i == -1) {
+				hitTime = memory.getAccessTime();
+			} else {
+				hitTime = caches[i].getAccessTime();
+			}
+			result += hitTime * missRate;
+			if(i >= 0){
+				missRate *= caches[i].getdMiss() / (caches[i].getdHit() + caches[i].getdMiss());
+			}
+		}
+		return result;
+	}
+	
+	public float getCPI() {
+		float result = 1;
+		float missRate = 1;
+		for (int i = caches.length - 1; i >= 0; i--) {
+			float hitTime;
+			if(i == 0) {
+				hitTime = memory.getAccessTime();
+			} else {
+				hitTime = caches[i+1].getAccessTime();
+			}
+			missRate *= caches[i].getdMiss() / (caches[i].getdHit() + caches[i].getdMiss());
+			result+=(memory.getDataInstructions()+1)*missRate*(hitTime/caches[0].getAccessTime());
+		}
+		return result;
+	}
+	
+	public float getIPC(){
+		float CPI = getCPI();
+		return 1/CPI;
+	}
+	
 }
