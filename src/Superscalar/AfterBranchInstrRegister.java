@@ -4,8 +4,8 @@ public class AfterBranchInstrRegister {
 	private StageInstruction[] stageInstructions;
 	private int current = 0;
 	
-	public AfterBranchInstrRegister(int n){
-		this.stageInstructions = new StageInstruction[n];
+	public AfterBranchInstrRegister(){
+		this.stageInstructions = new StageInstruction[1000];
 	}
 
 	public StageInstruction[] getStageInstructions() {

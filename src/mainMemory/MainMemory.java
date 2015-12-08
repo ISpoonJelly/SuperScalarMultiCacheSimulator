@@ -1,17 +1,18 @@
 package mainMemory;
 
 import java.util.HashMap;
+
 import cache.Address;
+
 
 public class MainMemory {
 	private HashMap<Integer, String> iMemory;		// 32k blocks
 	private HashMap<Integer, Integer> dMemory;		// 32k blocks
-	private int accessTime, iHit, dHit;
+	private int accessTime;
 	private static int size = 16384*2;
 	
 	public MainMemory(int accessTime) {
 		this.accessTime= accessTime;
-		this.iHit = this.dHit = 0;
 		initMemory();
 	}
 	
@@ -41,7 +42,7 @@ public class MainMemory {
 		for (int i = 0; i < blockSize; i++) {
 			result[i] = iMemory.get(startingAddress + i);
 		}
-		iHit++;
+		
 		return result;
 	}
 	
@@ -58,7 +59,7 @@ public class MainMemory {
 		for (int i = 0; i < blockSize; i++) {
 			result[i] = dMemory.get(startingAddress + i);
 		}
-		dHit++;
+		
 		return result;
 	}
 
@@ -84,10 +85,6 @@ public class MainMemory {
 
 	public static void setSize(int size) {
 		MainMemory.size = size;
-	}
-
-	public float getDataInstructions() {
-		return dHit / iHit;
 	}
 	
 }
