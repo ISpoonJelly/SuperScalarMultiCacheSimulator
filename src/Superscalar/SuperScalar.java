@@ -86,14 +86,15 @@ public class SuperScalar {
 							PC = PC + imm;
 						else
 							PC++;
-						System.out.println(PC + " -- PC");
+						//System.out.println(PC + " -- PC");
 					} else if (list[0].equals("jmp") || list[0].equals("jalr")) {
 						issueReg.setStageInstructions(temp);
 					} else if (list[0].equals("ret")) {
 						issueReg.setStageInstructions(temp);
-					} else
+					} else{
 						PC++;
-					issueReg.setStageInstructions(temp);
+						issueReg.setStageInstructions(temp);
+					}
 
 				}
 				//
@@ -133,13 +134,13 @@ public class SuperScalar {
 			return;
 		}
 		if (!SuperScalar.jumpFound && !SuperScalar.returnFound) {
-			System.out.println("ENTERED ");
+			//System.out.println("ENTERED ");
 			for (int i = 0; i < superNumber; i++) {
 				StageInstruction first = issueReg.returnFirst();
 
 				// System.out.println(first.instruction);
 				if (first != null) {
-					System.out.println("FIRST CYCLE " + first.cycles);
+					//System.out.println("FIRST CYCLE " + first.cycles);
 					StageInstruction inst = issueHandler.decode(first, first.cycles);
 					if (inst != null) {
 						inst.cycles--;
@@ -148,8 +149,8 @@ public class SuperScalar {
 							inst.setCycles(execCycles.getExcuteCycles(inst.getInstruction()));
 							executeReg.getStageInstructions().put(i, inst);
 						}
-						System.out.println(issueReg);
-						System.out.println(executeReg);
+//						System.out.println(issueReg);
+//						System.out.println(executeReg);
 
 					}
 
@@ -185,11 +186,11 @@ public class SuperScalar {
 					if (instr[i].cycles == 0) {
 						Integer ind = executeReg.findIndex(instr[i]);
 						StageInstruction stageInstr = instr[i];
-						System.out.println(stageInstr.instruction + "Stage");
+//						System.out.println(stageInstr.instruction + "Stage");
 						executeReg.getStageInstructions().put(ind, null);
 						stageInstr.setCycles(writeCycles.getWriteCycles(stageInstr.getInstruction()));
 						writeReg.getStageInstructions().put(ind, stageInstr);
-						System.out.println("FIND INDEX " + ind + "  " + stageInstr.instruction);
+//						System.out.println("FIND INDEX " + ind + "  " + stageInstr.instruction);
 
 					}
 					// executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]),
@@ -201,8 +202,8 @@ public class SuperScalar {
 				}
 			}
 		}
-		System.out.println("WRITE REG");
-		System.out.println(writeReg);
+//		System.out.println("WRITE REG");
+//		System.out.println(writeReg);
 	}
 
 	/*
@@ -282,23 +283,23 @@ public class SuperScalar {
 		//s.fetch(instructions);
 		s.fetch();
 		s.issue();
-		System.out.println(branchFound + " Branch Found");
-		System.out.println(afterBranchInstr);
-		System.out.println(s);
-		System.out.println("---------------------");
+//		System.out.println(branchFound + " Branch Found");
+//		System.out.println(afterBranchInstr);
+//		System.out.println(s);
+//		System.out.println("---------------------");
 		// s.issue();
 		s.execute();
-		System.out.println(numberOfBranches + " -- " + mispredictedBranches + " Misprediction");
-		System.out.println(PC + " -- Afterbranch PC");
-		System.out.println(s);
+		//System.out.println(numberOfBranches + " -- " + mispredictedBranches + " Misprediction");
+		//System.out.println(PC + " -- Afterbranch PC");
+//		System.out.println(s);
 		s.write();
-		System.out.println(s);
+//		System.out.println(s);
 		s.commit();
-		System.out.println(s);
+//		System.out.println(s);
 		//s.fetch(instructions);
 		s.fetch();
 		s.issue();
-		System.out.println(s);
+//		System.out.println(s);
 
 	}
 

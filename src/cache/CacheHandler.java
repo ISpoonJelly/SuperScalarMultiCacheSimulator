@@ -18,6 +18,7 @@ public class CacheHandler {
 	}
 	
 	public String fetchInstruction(int address) {
+		System.out.println("Address in!! " + address);
 		String[] result = null;
 		Address adr = new Address(address);
 		int offset = adr.getOffset(cacheBlockSize);
@@ -27,6 +28,9 @@ public class CacheHandler {
 			ICacheEntry instructions = caches[i].fetchInstructions(address);
 			if(instructions != null) {
 				result = instructions.getData();
+				for (int j = 0; j < result.length; j++) {
+					System.out.print(result[j]+",");
+				}
 				break;
 			}
 			i--;
@@ -36,6 +40,8 @@ public class CacheHandler {
 			result = memory.fetchInstruction(address, cacheBlockSize);
 			i = 0;
 		}
+		System.out.println("loaded, instruction: " + result[offset]);
+		System.out.println("offset: " + offset);
 		
 		while(i < caches.length) {
 			Cache cache = caches[i];

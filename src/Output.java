@@ -116,7 +116,7 @@ public class Output extends JFrame implements ActionListener {
 		contentPane.add(scrollPanerob);
 		
 		String [] robCols = {"Head/Tail", "Id", "Dest", "Value", "Ready"};
-		Object [][] robData = new Object[3][5];
+		Object [][] robData = new Object[GUI.ROB_SIZE][5];
 		robTable = new JTable(robData, robCols);
 		robTable.setFillsViewportHeight(true);
 		robTable.setCellSelectionEnabled(true);
@@ -258,7 +258,6 @@ public class Output extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("btnNext")) {
 			if (GUI.brain.simulate()) {
-			
 				updateROB();
 				updateScoreBoard();
 				updateRegisterStatus();

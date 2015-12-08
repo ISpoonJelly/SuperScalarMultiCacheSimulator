@@ -25,7 +25,7 @@ public class Brain {
 			SuperScalar.scoreboard = tempScoreBoard;
 			SuperScalar.rob = tempROB;
 			superScalar.execute();
-			// fetch first
+			superScalar.fetch();
 			superScalar.issue();
 			// TODO: Combine the 2 ROBs and 2 ScoreBoards
 			ScoreBoard finalscoreBoard = combineScoreBoards(SuperScalar.scoreboard, commitWriteScoreBoard,

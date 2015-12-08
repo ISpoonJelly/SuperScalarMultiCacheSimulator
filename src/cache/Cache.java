@@ -13,9 +13,9 @@ public class Cache {
 
 	public Cache(int level, int CacheSize, int blockSize, int assoc, int accessTime, boolean writeBack) {
 		this.level = level;
-		iCache = new ICacheEntry[CacheSize];
-		dCache = new DCacheEntry[CacheSize];
 		this.blockNum = CacheSize/blockSize;
+		iCache = new ICacheEntry[blockNum];
+		dCache = new DCacheEntry[blockNum];
 		this.blockSize = blockSize;
 		this.assoc = assoc;
 		this.accessTime = accessTime;
@@ -48,12 +48,15 @@ public class Cache {
 	public ICacheEntry fetchInstructions(int address) {
 		Address ad = new Address(address);
 		int index = ad.getIndex(blockSize, blockNum);
-		int tag = ad.getTag(blockSize, blockNum);
+		int tag = ad.getTag(blockSize, 0);
+		System.out.println("address here tag: " + tag);
 		int set = index / (blockNum /assoc);
 		
 		ICacheEntry entry = null;
-		for (int i = set; i < set + setSize; i++) {
-			if(iCache[i] != null && iCache[i].getTag() == tag) {
+		int startingIndex = set * assoc;
+		for (int i = startingIndex; i < startingIndex + setSize; i++) {
+			if(iCache[i] != null && iCache[i].getTag() == tag) { 
+				System.out.println("found! here tag: " + tag);
 				entry = iCache[i];
 				iHit++;
 				break;
@@ -61,7 +64,7 @@ public class Cache {
 		}
 		if(entry == null)
 			iMiss++;
-
+		System.out.println("ENTRY IS"+entry);
 		return entry;
 	}
 
@@ -95,10 +98,6 @@ public class Cache {
 		
 		dCache[place] = entry;
 	}
-	
-	public void updateData(int address, Integer data) {
-		
-	}
 
 	public DCacheEntry fetchData(int address) {
 		Address ad = new Address(address);
@@ -107,7 +106,8 @@ public class Cache {
 		int set = index / (blockNum /assoc);
 		
 		DCacheEntry entry = null;
-		for (int i = set; i < set + setSize; i++) {
+		int startingIndex = set * assoc;
+		for (int i = startingIndex; i < startingIndex + setSize; i++) {
 			if(dCache[i] != null && dCache[i].getTag() == tag) {
 				entry = dCache[i];
 				dHit++;

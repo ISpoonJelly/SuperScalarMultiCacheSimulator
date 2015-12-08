@@ -29,6 +29,7 @@ public class MainMemory {
 	public void addInstruction(int org, String[] instructions) {
 		for (int i = org; i < org + instructions.length; i++) {
 			iMemory.put(i, instructions[i]);
+			System.out.println("memory store instruction.." + i + " instruction is .."+ instructions[i]);
 		}
 	}
 	

@@ -139,6 +139,9 @@ public class GUI extends JFrame implements ActionListener {
 		
 		r0 = new JTextField();
 		r0.setBounds(32, 29, 50, 28);
+		r0.setText("0");
+		r0.setEnabled(false);
+		r0.setEditable(false);
 		contentPane.add(r0);
 		r0.setColumns(5);
 		
@@ -148,6 +151,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		r1 = new JTextField();
 		r1.setBounds(32, 57, 50, 28);
+		r1.setText("1");
 		contentPane.add(r1);
 		r1.setColumns(10);
 		
@@ -157,6 +161,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		r2 = new JTextField();
 		r2.setBounds(32, 84, 50, 28);
+		r2.setText("1");
 		contentPane.add(r2);
 		r2.setColumns(10);
 		
@@ -166,6 +171,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		r3 = new JTextField();
 		r3.setBounds(32, 113, 50, 28);
+		r3.setText("1");
 		contentPane.add(r3);
 		r3.setColumns(10);
 		
@@ -175,6 +181,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		r4 = new JTextField();
 		r4.setBounds(32, 141, 50, 28);
+		r4.setText("1");
 		contentPane.add(r4);
 		r4.setColumns(10);
 		
@@ -184,6 +191,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		r5 = new JTextField();
 		r5.setBounds(32, 169, 50, 28);
+		r5.setText("1");
 		contentPane.add(r5);
 		r5.setColumns(10);
 		
@@ -193,6 +201,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		r6 = new JTextField();
 		r6.setBounds(32, 197, 50, 28);
+		r6.setText("1");
 		contentPane.add(r6);
 		r6.setColumns(10);
 		
@@ -202,6 +211,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		r7 = new JTextField();
 		r7.setBounds(32, 224, 50, 28);
+		r7.setText("1");
 		contentPane.add(r7);
 		r7.setColumns(10);
 		
@@ -219,6 +229,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		load = new JTextField();
 		load.setBounds(169, 29, 50, 28);
+		load.setText("1");
 		contentPane.add(load);
 		load.setColumns(10);
 		
@@ -228,6 +239,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		store = new JTextField();
 		store.setBounds(169, 57, 50, 28);
+		store.setText("1");
 		contentPane.add(store);
 		store.setColumns(10);
 		
@@ -237,6 +249,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		jump = new JTextField();
 		jump.setBounds(169, 85, 50, 28);
+		jump.setText("1");
 		contentPane.add(jump);
 		jump.setColumns(10);
 		
@@ -246,6 +259,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		ret = new JTextField();
 		ret.setBounds(169, 113, 50, 28);
+		ret.setText("1");
 		contentPane.add(ret);
 		ret.setColumns(10);
 		
@@ -255,6 +269,8 @@ public class GUI extends JFrame implements ActionListener {
 		
 		add = new JTextField();
 		add.setBounds(169, 141, 50, 28);
+		add.setText("1");
+		
 		contentPane.add(add);
 		add.setColumns(10);
 		
@@ -264,6 +280,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		nand = new JTextField();
 		nand.setBounds(169, 169, 50, 28);
+		nand.setText("1");
 		contentPane.add(nand);
 		nand.setColumns(10);
 		
@@ -273,6 +290,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		mult = new JTextField();
 		mult.setBounds(169, 197, 50, 28);
+		mult.setText("1");
 		contentPane.add(mult);
 		mult.setColumns(10);
 		
@@ -291,6 +309,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		blockSize = new JTextField();
 		blockSize.setBounds(354, 29, 50, 28);
+		blockSize.setText("1");
 		contentPane.add(blockSize);
 		blockSize.setColumns(10);
 		
@@ -300,6 +319,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		robNo = new JTextField();
 		robNo.setBounds(354, 57, 50, 28);
+		robNo.setText("1");
 		contentPane.add(robNo);
 		robNo.setColumns(10);
 		
@@ -316,6 +336,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		memoryAccessTime = new JTextField();
 		memoryAccessTime.setBounds(354, 113, 50, 28);
+		memoryAccessTime.setText("1");
 		contentPane.add(memoryAccessTime);
 		memoryAccessTime.setColumns(10);
 		
@@ -354,37 +375,44 @@ public class GUI extends JFrame implements ActionListener {
 		laodTextField = new JTextField();
 		laodTextField.setBounds(512, 29, 50, 28);
 		contentPane.add(laodTextField);
+		laodTextField.setText("1");
 		laodTextField.setColumns(10);
 		
 		storeTextField = new JTextField();
 		storeTextField.setBounds(512, 57, 50, 28);
 		contentPane.add(storeTextField);
 		storeTextField.setColumns(10);
+		storeTextField.setText("1");
 		
 		addTextField = new JTextField();
 		addTextField.setBounds(512, 85, 50, 28);
 		contentPane.add(addTextField);
 		addTextField.setColumns(10);
+		addTextField.setText("1");
 		
 		nandTextField = new JTextField();
 		nandTextField.setBounds(512, 113, 50, 28);
 		contentPane.add(nandTextField);
 		nandTextField.setColumns(10);
+		nandTextField.setText("1");
 		
 		multTextField = new JTextField();
 		multTextField.setBounds(512, 141, 50, 28);
 		contentPane.add(multTextField);
 		multTextField.setColumns(10);
+		multTextField.setText("1");
 		
 		jumpTextField = new JTextField();
 		jumpTextField.setBounds(512, 169, 50, 28);
 		contentPane.add(jumpTextField);
 		jumpTextField.setColumns(10);
+		jumpTextField.setText("1");
 		
 		returnTextField = new JTextField();
 		returnTextField.setBounds(512, 197, 50, 28);
 		contentPane.add(returnTextField);
 		returnTextField.setColumns(10);
+		returnTextField.setText("1");
 	}
 	public void CloseFrame() {
 		super.dispose();
