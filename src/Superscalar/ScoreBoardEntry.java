@@ -97,6 +97,11 @@ public class ScoreBoardEntry {
 	public Integer getOperation() {
 		return operation;
 	}
+	
+	public String getOperationName() {
+		int opIntVal = operation.intValue();
+		return Operation.getName(opIntVal);
+	}
 
 
 	public void setOperation(Integer operation) {

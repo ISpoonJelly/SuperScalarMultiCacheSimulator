@@ -10,11 +10,18 @@ import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+
+import Superscalar.ScoreBoard;
+import Superscalar.ScoreBoardEntry;
+import Superscalar.SuperScalar;
+
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JButton;
 
@@ -32,7 +39,7 @@ public class Output extends JFrame implements ActionListener {
 	private JLabel lblRegisterFile;
 	private JTable registerFileTable;
 	private JScrollPane scrollPane_1;
-	private JButton btnNext;
+	private JButton btnNext; 
 
 	/**
 	 * Launch the application.
@@ -148,6 +155,42 @@ public class Output extends JFrame implements ActionListener {
 		contentPane.add(btnNext);
 		
 	}
+	
+	public void updateScoreBoard() {
+		ScoreBoard sb = SuperScalar.scoreboard;
+		Iterator<Map.Entry<String, ScoreBoardEntry>> iterator = sb.getScoreBoard().entrySet().iterator();
+		int i = 0;
+
+		while (iterator.hasNext()) {
+			Map.Entry<String, ScoreBoardEntry> entry = (Map.Entry<String, ScoreBoardEntry>) iterator
+					.next();
+			ScoreBoardEntry entryData = entry.getValue();
+			tableScoreboard.setValueAt(entry.getKey(), i, 0);
+			tableScoreboard.setValueAt(entryData.isBusy(), i, 1);
+			if (entryData.isBusy()) {
+				tableScoreboard.setValueAt(entryData.getOperationName(), i, 2);
+				tableScoreboard.setValueAt(entryData.getVj(), i, 3);
+				tableScoreboard.setValueAt(entryData.getVk(), i, 4);
+				tableScoreboard.setValueAt(entryData.getQj(), i, 5);
+				tableScoreboard.setValueAt(entryData.getQk(), i, 6);
+				tableScoreboard.setValueAt(entryData.getDestination(), i, 7);
+				tableScoreboard.setValueAt(entryData.getA(), i, 8);
+
+			}
+			
+			i++;
+			
+			
+		}
+	}
+	
+	public void updateROB() {
+		for (int i =1; i < SuperScalar.rob..length; i++) {
+			
+		}
+	}
+	
+	//TODO initialize objects with entered data
 	
 	public void CloseFrame() {
 		super.dispose();

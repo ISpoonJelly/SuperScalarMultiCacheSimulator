@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.Font;
 
 public class MainMemoryData extends JFrame implements ActionListener{
 
@@ -79,7 +80,8 @@ public class MainMemoryData extends JFrame implements ActionListener{
 		btnDone.setActionCommand("doneButton");
 		
 		JLabel lblAddDataTo = new JLabel("Add Data to MainMemory");
-		lblAddDataTo.setBounds(29, 40, 184, 16);
+		lblAddDataTo.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblAddDataTo.setBounds(29, 40, 248, 16);
 		contentPane.add(lblAddDataTo);
 		
 	}
