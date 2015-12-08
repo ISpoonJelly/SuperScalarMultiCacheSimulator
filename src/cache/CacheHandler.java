@@ -5,6 +5,10 @@ import mainMemory.MainMemory;
 public class CacheHandler {
 	private static MainMemory memory;
 	private static Cache[] caches;
+	public static Cache[] getCaches() {
+		return caches;
+	}
+
 	private static int cacheBlockSize;
 	
 	public CacheHandler() {
