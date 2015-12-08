@@ -7,11 +7,10 @@ public class Brain {
 	public SuperScalar superScalar;
 	public ROB rob;
 
-	public Brain(int sn, RegisterFile registerFile, CacheHandler cHandler,
-			WriteCycles writeCycles, ExecuteCycles execCycles, ROB rob,
-			ScoreBoard scoreBoard, RegisterStatus registerStatus) {
-		superScalar = new SuperScalar(sn, registerFile, cHandler, writeCycles,
-				execCycles, rob, scoreBoard, registerStatus);
+	public Brain(int sn, RegisterFile registerFile, CacheHandler cHandler, WriteCycles writeCycles,
+			ExecuteCycles execCycles, ROB rob, ScoreBoard scoreBoard, RegisterStatus registerStatus) {
+		superScalar = new SuperScalar(sn, registerFile, cHandler, writeCycles, execCycles, rob, scoreBoard,
+				registerStatus);
 		this.rob = rob;
 	}
 
@@ -29,12 +28,11 @@ public class Brain {
 			// fetch first
 			superScalar.issue();
 			// TODO: Combine the 2 ROBs and 2 ScoreBoards
-			ScoreBoard finalscoreBoard = combineScoreBoards(
-					SuperScalar.scoreboard, commitWriteScoreBoard,
+			ScoreBoard finalscoreBoard = combineScoreBoards(SuperScalar.scoreboard, commitWriteScoreBoard,
 					tempScoreBoard);
 			ROB finalROB = combineROB(SuperScalar.rob, commitWriteROB, tempROB);
-			superScalar.scoreboard = finalscoreBoard;
-			superScalar.rob = finalROB;
+			SuperScalar.scoreboard = finalscoreBoard;
+			SuperScalar.rob = finalROB;
 			cycles++;
 			return true;
 
@@ -52,13 +50,11 @@ public class Brain {
 				// fetch first
 				superScalar.issue();
 				// Combine the 2 ROBs and 2 ScoreBoards
-				ScoreBoard finalscoreBoard = combineScoreBoards(
-						SuperScalar.scoreboard, commitWriteScoreBoard,
+				ScoreBoard finalscoreBoard = combineScoreBoards(SuperScalar.scoreboard, commitWriteScoreBoard,
 						tempScoreBoard);
-				ROB finalROB = combineROB(SuperScalar.rob, commitWriteROB,
-						tempROB);
-				superScalar.scoreboard = finalscoreBoard;
-				superScalar.rob = finalROB;
+				ROB finalROB = combineROB(SuperScalar.rob, commitWriteROB, tempROB);
+				SuperScalar.scoreboard = finalscoreBoard;
+				SuperScalar.rob = finalROB;
 				cycles++;
 				return true;
 			}
@@ -69,12 +65,10 @@ public class Brain {
 
 	private ROB combineROB(ROB finalrob, ROB commitWriteROB, ROB originalROB) {
 		for (int i = 1; i < originalROB.size; i++) {
-			if (originalROB.getROBEntry()[i] == null
-					&& finalrob.getROBEntry()[i] != null) {
+			if (originalROB.getROBEntry()[i] == null && finalrob.getROBEntry()[i] != null) {
 				originalROB.setROBEntry(finalrob.getROBEntry()[i], i);
 			} else {
-				if (originalROB.getROBEntry()[i] != null
-						&& commitWriteROB.getROBEntry()[i] == null) {
+				if (originalROB.getROBEntry()[i] != null && commitWriteROB.getROBEntry()[i] == null) {
 					originalROB.setROBEntry(null, i);
 				}
 			}
@@ -82,22 +76,19 @@ public class Brain {
 		return originalROB;
 	}
 
-	private ScoreBoard combineScoreBoards(ScoreBoard finalscoreboard,
-			ScoreBoard commitWriteScoreBoard, ScoreBoard originalScoreBoard) {
+	private ScoreBoard combineScoreBoards(ScoreBoard finalscoreboard, ScoreBoard commitWriteScoreBoard,
+			ScoreBoard originalScoreBoard) {
 
 		for (int i = 1; i <= originalScoreBoard.getLoad(); i++) {
 			String l = "load" + i;
-			if (originalScoreBoard.getScoreBoard().get(l).getOperation() != null) {
-				if (commitWriteScoreBoard.getScoreBoard().get(l).getOperation() == null)
-					originalScoreBoard.getScoreBoard().put(
-							l,
-							new ScoreBoardEntry(false, null, "", "", null,
-									null, null, 0));
+			if (originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+				if (!commitWriteScoreBoard.getScoreBoard().get(l).isBusy())
+					originalScoreBoard.getScoreBoard().put(l,
+							new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 			} else {
-				if (originalScoreBoard.getScoreBoard().get(l).getOperation() == null) {
-					if (finalscoreboard.getScoreBoard().get(l).getOperation() != null) {
-						originalScoreBoard.getScoreBoard().put(l,
-								finalscoreboard.getScoreBoard().get(l));
+				if (!originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+					if (finalscoreboard.getScoreBoard().get(l).isBusy()) {
+						originalScoreBoard.getScoreBoard().put(l, finalscoreboard.getScoreBoard().get(l));
 					}
 				}
 			}
@@ -106,17 +97,14 @@ public class Brain {
 		// store reservation stations
 		for (int i = 1; i <= originalScoreBoard.getStore(); i++) {
 			String l = "store" + i;
-			if (originalScoreBoard.getScoreBoard().get(l).getOperation() != null) {
-				if (commitWriteScoreBoard.getScoreBoard().get(l).getOperation() == null)
-					originalScoreBoard.getScoreBoard().put(
-							l,
-							new ScoreBoardEntry(false, null, "", "", null,
-									null, null, 0));
+			if (originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+				if (!commitWriteScoreBoard.getScoreBoard().get(l).isBusy())
+					originalScoreBoard.getScoreBoard().put(l,
+							new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 			} else {
-				if (originalScoreBoard.getScoreBoard().get(l).getOperation() == null) {
-					if (finalscoreboard.getScoreBoard().get(l).getOperation() != null) {
-						originalScoreBoard.getScoreBoard().put(l,
-								finalscoreboard.getScoreBoard().get(l));
+				if (!originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+					if (finalscoreboard.getScoreBoard().get(l).isBusy()) {
+						originalScoreBoard.getScoreBoard().put(l, finalscoreboard.getScoreBoard().get(l));
 					}
 				}
 			}
@@ -125,17 +113,14 @@ public class Brain {
 		// add reservation stations
 		for (int i = 1; i <= originalScoreBoard.getAdd(); i++) {
 			String l = "add" + i;
-			if (originalScoreBoard.getScoreBoard().get(l).getOperation() != null) {
-				if (commitWriteScoreBoard.getScoreBoard().get(l).getOperation() == null)
-					originalScoreBoard.getScoreBoard().put(
-							l,
-							new ScoreBoardEntry(false, null, "", "", null,
-									null, null, 0));
+			if (originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+				if (!commitWriteScoreBoard.getScoreBoard().get(l).isBusy())
+					originalScoreBoard.getScoreBoard().put(l,
+							new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 			} else {
-				if (originalScoreBoard.getScoreBoard().get(l).getOperation() == null) {
-					if (finalscoreboard.getScoreBoard().get(l).getOperation() != null) {
-						originalScoreBoard.getScoreBoard().put(l,
-								finalscoreboard.getScoreBoard().get(l));
+				if (!originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+					if (finalscoreboard.getScoreBoard().get(l).isBusy()) {
+						originalScoreBoard.getScoreBoard().put(l, finalscoreboard.getScoreBoard().get(l));
 					}
 				}
 			}
@@ -144,17 +129,14 @@ public class Brain {
 		// mult reservation stations
 		for (int i = 1; i <= originalScoreBoard.getMult(); i++) {
 			String l = "mult" + i;
-			if (originalScoreBoard.getScoreBoard().get(l).getOperation() != null) {
-				if (commitWriteScoreBoard.getScoreBoard().get(l).getOperation() == null)
-					originalScoreBoard.getScoreBoard().put(
-							l,
-							new ScoreBoardEntry(false, null, "", "", null,
-									null, null, 0));
+			if (originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+				if (!commitWriteScoreBoard.getScoreBoard().get(l).isBusy())
+					originalScoreBoard.getScoreBoard().put(l,
+							new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 			} else {
-				if (originalScoreBoard.getScoreBoard().get(l).getOperation() == null) {
-					if (finalscoreboard.getScoreBoard().get(l).getOperation() != null) {
-						originalScoreBoard.getScoreBoard().put(l,
-								finalscoreboard.getScoreBoard().get(l));
+				if (!originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+					if (finalscoreboard.getScoreBoard().get(l).isBusy()) {
+						originalScoreBoard.getScoreBoard().put(l, finalscoreboard.getScoreBoard().get(l));
 					}
 				}
 			}
@@ -163,17 +145,14 @@ public class Brain {
 		// jump reservation stations
 		for (int i = 1; i <= originalScoreBoard.getJump(); i++) {
 			String l = "jump" + i;
-			if (originalScoreBoard.getScoreBoard().get(l).getOperation() != null) {
-				if (commitWriteScoreBoard.getScoreBoard().get(l).getOperation() == null)
-					originalScoreBoard.getScoreBoard().put(
-							l,
-							new ScoreBoardEntry(false, null, "", "", null,
-									null, null, 0));
+			if (originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+				if (!commitWriteScoreBoard.getScoreBoard().get(l).isBusy())
+					originalScoreBoard.getScoreBoard().put(l,
+							new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 			} else {
-				if (originalScoreBoard.getScoreBoard().get(l).getOperation() == null) {
-					if (finalscoreboard.getScoreBoard().get(l).getOperation() != null) {
-						originalScoreBoard.getScoreBoard().put(l,
-								finalscoreboard.getScoreBoard().get(l));
+				if (!originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+					if (finalscoreboard.getScoreBoard().get(l).isBusy()) {
+						originalScoreBoard.getScoreBoard().put(l, finalscoreboard.getScoreBoard().get(l));
 					}
 				}
 			}
@@ -182,17 +161,14 @@ public class Brain {
 		// return reservation stations
 		for (int i = 1; i <= originalScoreBoard.getRet(); i++) {
 			String l = "ret" + i;
-			if (originalScoreBoard.getScoreBoard().get(l).getOperation() != null) {
-				if (commitWriteScoreBoard.getScoreBoard().get(l).getOperation() == null)
-					originalScoreBoard.getScoreBoard().put(
-							l,
-							new ScoreBoardEntry(false, null, "", "", null,
-									null, null, 0));
+			if (originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+				if (!commitWriteScoreBoard.getScoreBoard().get(l).isBusy())
+					originalScoreBoard.getScoreBoard().put(l,
+							new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 			} else {
-				if (originalScoreBoard.getScoreBoard().get(l).getOperation() == null) {
-					if (finalscoreboard.getScoreBoard().get(l).getOperation() != null) {
-						originalScoreBoard.getScoreBoard().put(l,
-								finalscoreboard.getScoreBoard().get(l));
+				if (!originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+					if (finalscoreboard.getScoreBoard().get(l).isBusy()) {
+						originalScoreBoard.getScoreBoard().put(l, finalscoreboard.getScoreBoard().get(l));
 					}
 				}
 			}
@@ -200,17 +176,14 @@ public class Brain {
 		// nand reservation stations
 		for (int i = 1; i <= originalScoreBoard.getNand(); i++) {
 			String l = "nand" + i;
-			if (originalScoreBoard.getScoreBoard().get(l).getOperation() != null) {
-				if (commitWriteScoreBoard.getScoreBoard().get(l).getOperation() == null)
-					originalScoreBoard.getScoreBoard().put(
-							l,
-							new ScoreBoardEntry(false, null, "", "", null,
-									null, null, 0));
+			if (originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+				if (!commitWriteScoreBoard.getScoreBoard().get(l).isBusy())
+					originalScoreBoard.getScoreBoard().put(l,
+							new ScoreBoardEntry(false, null, "", "", null, null, null, 0));
 			} else {
-				if (originalScoreBoard.getScoreBoard().get(l).getOperation() == null) {
-					if (finalscoreboard.getScoreBoard().get(l).getOperation() != null) {
-						originalScoreBoard.getScoreBoard().put(l,
-								finalscoreboard.getScoreBoard().get(l));
+				if (!originalScoreBoard.getScoreBoard().get(l).isBusy()) {
+					if (finalscoreboard.getScoreBoard().get(l).isBusy()) {
+						originalScoreBoard.getScoreBoard().put(l, finalscoreboard.getScoreBoard().get(l));
 					}
 				}
 			}

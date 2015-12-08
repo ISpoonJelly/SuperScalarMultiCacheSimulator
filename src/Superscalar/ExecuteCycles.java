@@ -17,7 +17,7 @@ public class ExecuteCycles {
 	public ExecuteCycles(int load, int store, int jump, int ret, int add,
 			int nand, int mult) {
 		LOAD = load+1;
-		STORE = store;
+		STORE = 1;
 		JUMP = jump;
 		BRANCH = add;
 		JUMP_AND_LINK = jump;

@@ -5,7 +5,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Superscalar.Brain;
+import Superscalar.ExecuteCycles;
+import Superscalar.ROB;
 import Superscalar.RegisterFile;
+import Superscalar.RegisterStatus;
+import Superscalar.ScoreBoard;
+import Superscalar.WriteCycles;
 import cache.Cache;
 import cache.CacheHandler;
 import mainMemory.MainMemory;
@@ -65,9 +71,17 @@ public class GUI extends JFrame implements ActionListener {
 	public static int noCache = 0;
 	public static int Cycles = 1;
 	public static RegisterFile registerFile = new RegisterFile();
+	public static RegisterStatus registerStatus = new RegisterStatus();
 	public static int superNumber;
 	public static int LOAD, STORE, ADD, MULT, JUMP, NAND, RET;
 	public static int BLOCK_SIZE, ROB_SIZE, MEM_ACCESS_TIME;
+	public static int LOAD_FU, STORE_FU, ADD_FU, JUMP_FU, NAND_FU, RETURN_FU, MULT_FU;
+	public static ROB rob;
+	public static Brain brain;
+	public static ExecuteCycles execCycles;
+	public static WriteCycles writeCycles;
+	
+	public static ScoreBoard scoreboard;
 	public static MainMemory mainmemory;
 	public static ArrayList<Cache> caches = new ArrayList<Cache>();
 	public static CacheHandler cHanlder;
@@ -75,6 +89,21 @@ public class GUI extends JFrame implements ActionListener {
 	private JTextField memoryAccessTime;
 
 	public static int ORG;
+	private JLabel lblLoad_1;
+	private JLabel lblStore_1;
+	private JLabel lblAdd_1;
+	private JLabel lblNand_1;
+	private JLabel lblMult;
+	private JLabel lblJump_FU;
+	private JLabel lblReturn;
+	private JLabel lblAvailableFunctionalUnits;
+	private JTextField laodTextField;
+	private JTextField storeTextField;
+	private JTextField addTextField;
+	private JTextField nandTextField;
+	private JTextField multTextField;
+	private JTextField jumpTextField;
+	private JTextField returnTextField;
 	
 	/**
 	 * Launch the application.
@@ -97,7 +126,7 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	public GUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 700, 500);
 		contentPane = new JPanel();
 		contentPane.setForeground(Color.BLACK);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -276,7 +305,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		JButton btnHandleCaches = new JButton("Handle Caches");
 		btnHandleCaches.setBackground(Color.ORANGE);
-		btnHandleCaches.setBounds(269, 225, 140, 29);
+		btnHandleCaches.setBounds(491, 287, 140, 29);
 		contentPane.add(btnHandleCaches);
 		btnHandleCaches.addActionListener(this);
 		btnHandleCaches.setActionCommand("btnHandleCaches");
@@ -289,6 +318,73 @@ public class GUI extends JFrame implements ActionListener {
 		memoryAccessTime.setBounds(354, 113, 50, 28);
 		contentPane.add(memoryAccessTime);
 		memoryAccessTime.setColumns(10);
+		
+		lblLoad_1 = new JLabel("LOAD");
+		lblLoad_1.setBounds(462, 35, 61, 16);
+		contentPane.add(lblLoad_1);
+		
+		lblStore_1 = new JLabel("STORE");
+		lblStore_1.setBounds(462, 63, 61, 16);
+		contentPane.add(lblStore_1);
+		
+		lblAdd_1 = new JLabel("ADD");
+		lblAdd_1.setBounds(462, 91, 61, 16);
+		contentPane.add(lblAdd_1);
+		
+		lblNand_1 = new JLabel("NAND");
+		lblNand_1.setBounds(462, 119, 61, 16);
+		contentPane.add(lblNand_1);
+		
+		lblMult = new JLabel("MULTIPLY");
+		lblMult.setBounds(443, 147, 80, 16);
+		contentPane.add(lblMult);
+		
+		lblJump_FU = new JLabel("JUMP");
+		lblJump_FU.setBounds(462, 175, 61, 16);
+		contentPane.add(lblJump_FU);
+		
+		lblReturn = new JLabel("RETURN");
+		lblReturn.setBounds(443, 203, 61, 16);
+		contentPane.add(lblReturn);
+		
+		lblAvailableFunctionalUnits = new JLabel("Available Functional Units:");
+		lblAvailableFunctionalUnits.setBounds(462, 6, 198, 16);
+		contentPane.add(lblAvailableFunctionalUnits);
+		
+		laodTextField = new JTextField();
+		laodTextField.setBounds(512, 29, 50, 28);
+		contentPane.add(laodTextField);
+		laodTextField.setColumns(10);
+		
+		storeTextField = new JTextField();
+		storeTextField.setBounds(512, 57, 50, 28);
+		contentPane.add(storeTextField);
+		storeTextField.setColumns(10);
+		
+		addTextField = new JTextField();
+		addTextField.setBounds(512, 85, 50, 28);
+		contentPane.add(addTextField);
+		addTextField.setColumns(10);
+		
+		nandTextField = new JTextField();
+		nandTextField.setBounds(512, 113, 50, 28);
+		contentPane.add(nandTextField);
+		nandTextField.setColumns(10);
+		
+		multTextField = new JTextField();
+		multTextField.setBounds(512, 141, 50, 28);
+		contentPane.add(multTextField);
+		multTextField.setColumns(10);
+		
+		jumpTextField = new JTextField();
+		jumpTextField.setBounds(512, 169, 50, 28);
+		contentPane.add(jumpTextField);
+		jumpTextField.setColumns(10);
+		
+		returnTextField = new JTextField();
+		returnTextField.setBounds(512, 197, 50, 28);
+		contentPane.add(returnTextField);
+		returnTextField.setColumns(10);
 	}
 	public void CloseFrame() {
 		super.dispose();
@@ -331,6 +427,14 @@ public class GUI extends JFrame implements ActionListener {
 			int nandValue = Integer.parseInt(nand.getText());
 			int multiplyValue = Integer.parseInt(mult.getText());
 			
+			int loadFu = Integer.parseInt(laodTextField.getText());
+			int storeFu = Integer.parseInt(storeTextField.getText());
+			int jumpFu = Integer.parseInt(jumpTextField.getText());
+			int	addFu = Integer.parseInt(addTextField.getText());
+			int nandFu = Integer.parseInt(nandTextField.getText());
+			int returnFu = Integer.parseInt(returnTextField.getText());
+			int multFu = Integer.parseInt(multTextField.getText());
+			
 			LOAD = loadValue;
 			STORE = storeValue;
 			JUMP = jumpValue;
@@ -338,25 +442,43 @@ public class GUI extends JFrame implements ActionListener {
 			ADD = addValue;
 			NAND = nandValue;
 			MULT = multiplyValue;
+			
+			LOAD_FU = loadFu;
+			STORE_FU = storeFu;
+			NAND_FU = nandFu;
+			ADD_FU = addFu;
+			JUMP_FU = jumpFu;
+			RETURN_FU = returnFu;
+			MULT_FU = multFu;
+			
+			scoreboard = new ScoreBoard(LOAD_FU, STORE_FU, ADD_FU, MULT_FU, JUMP_FU, RETURN_FU, NAND_FU);
+			
+			
+			// no. of superscalar
+			int nSuperscalarValue = Integer.parseInt(nSuperscalar.getText());
+			superNumber = nSuperscalarValue;
+			
+			// Cache 
+			int blockSizeValue = Integer.parseInt(blockSize.getText());
+			int robNoValue = Integer.parseInt(robNo.getText());
+			int memAccessTime = Integer.parseInt(memoryAccessTime.getText());
+			
+			BLOCK_SIZE = blockSizeValue;
+			ROB_SIZE = robNoValue;
+			MEM_ACCESS_TIME = memAccessTime;
+			
+			rob = new ROB(ROB_SIZE);
+			execCycles = new ExecuteCycles(LOAD, 1, JUMP, RET, ADD, NAND, MULT);
+			writeCycles = new WriteCycles(STORE);
+			
+			CloseFrame();
+			
+			CacheInfoGUI cacheGui = new CacheInfoGUI();
+			cacheGui.setVisible(true);
+			
 		}
 		
-		// no. of superscalar
-		int nSuperscalarValue = Integer.parseInt(nSuperscalar.getText());
-		superNumber = nSuperscalarValue;
 		
-		// Cache 
-		int blockSizeValue = Integer.parseInt(blockSize.getText());
-		int robNoValue = Integer.parseInt(robNo.getText());
-		int memAccessTime = Integer.parseInt(memoryAccessTime.getText());
-		
-		BLOCK_SIZE = blockSizeValue;
-		ROB_SIZE = robNoValue;
-		MEM_ACCESS_TIME = memAccessTime;
-		
-		CloseFrame();
-		
-		CacheInfoGUI cacheGui = new CacheInfoGUI();
-		cacheGui.setVisible(true);
 	}
 
 	public static void finalizeCache() {

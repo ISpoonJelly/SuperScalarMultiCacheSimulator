@@ -20,6 +20,14 @@ public class RegisterStatus {
 		regStatus.put(reg,null);
 	}
 	
+	public HashMap<String, Integer> getRegStatus() {
+		return regStatus;
+	}
+
+	public void setRegStatus(HashMap<String, Integer> regStatus) {
+		this.regStatus = regStatus;
+	}
+
 	public boolean registerAvailable(String reg)
 	{
 		return regStatus.get(reg) == null;

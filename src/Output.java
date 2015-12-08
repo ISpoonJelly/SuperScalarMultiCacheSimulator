@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
+import Superscalar.ROBEntry;
 import Superscalar.ScoreBoard;
 import Superscalar.ScoreBoardEntry;
 import Superscalar.SuperScalar;
@@ -40,6 +41,8 @@ public class Output extends JFrame implements ActionListener {
 	private JTable registerFileTable;
 	private JScrollPane scrollPane_1;
 	private JButton btnNext; 
+	
+	
 
 	/**
 	 * Launch the application.
@@ -61,6 +64,10 @@ public class Output extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public Output() {
+		// Simulating Brain
+		
+		
+		// GUI stuff
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
 		contentPane = new JPanel();
@@ -81,7 +88,8 @@ public class Output extends JFrame implements ActionListener {
 		contentPane.add(lblScoreboard);
 		
 		String [] cols = {"FU", "Busy", "Op", "Vj", "Vk", "Qj", "Qk", "Dest", "A"};
-		Object [][] data = new Object[10][9];
+		int totalFU = GUI.ADD_FU + GUI.JUMP_FU + GUI.LOAD_FU + GUI.STORE_FU + GUI.RETURN_FU + GUI.MULT_FU + GUI.NAND_FU;
+		Object [][] data = new Object[totalFU][9];
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -154,6 +162,13 @@ public class Output extends JFrame implements ActionListener {
 		btnNext.addActionListener(this);
 		contentPane.add(btnNext);
 		
+		if (GUI.brain.simulate()) {
+			updateROB();
+			updateScoreBoard();
+			updateRegisterStatus();
+			updateRegisterFile();
+		}
+		
 	}
 	
 	public void updateScoreBoard() {
@@ -185,9 +200,52 @@ public class Output extends JFrame implements ActionListener {
 	}
 	
 	public void updateROB() {
-		//for (int i =1; i < SuperScalar.rob..length; i++) {
+		ROBEntry[] robEntries = SuperScalar.rob.getROBEntry();
+		for (int i =1; i < robEntries.length; i++) {
+			if (SuperScalar.rob.getHead() == i) {
+				if (SuperScalar.rob.getTail() == i)
+					robTable.setValueAt("Head/Tail", i - 1, 0);
+				else {
+					robTable.setValueAt("Head", i - 1, 0);
+				}
+			} else if (SuperScalar.rob.getTail() == i) 
+						robTable.setValueAt("Tail", i - 1, 0);
 			
-		//}
+			robTable.setValueAt(i, i - 1, 1);
+			if(robEntries[i] == null){
+				robTable.setValueAt("", i - 1, 2);
+				robTable.setValueAt("", i - 1, 3);
+				robTable.setValueAt("", i - 1, 4);
+			}
+			else{
+				robTable.setValueAt(robEntries[i].getDest(), i - 1, 2);
+				robTable.setValueAt(robEntries[i].getValue(), i - 1, 3);
+				robTable.setValueAt(robEntries[i].isReady(), i - 1, 4);
+			}
+
+		}
+	}
+	
+	public void updateRegisterStatus() {
+		Iterator<Map.Entry<String, Integer>> iterator = SuperScalar.registerStatus.getRegStatus()
+				.entrySet().iterator();
+
+		int i = 0;
+		while (iterator.hasNext()) {
+			Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator.next();
+			registerStatusTable.setValueAt(entry.getValue(), 0 , i++);
+		}
+	}
+	
+	public void updateRegisterFile() {
+		Iterator<Map.Entry<String, Integer>> iterator = SuperScalar.registerFile.getRegisterFile()
+				.entrySet().iterator();
+
+		int i = 0;
+		while (iterator.hasNext()) {
+			Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator.next();
+			registerFileTable.setValueAt(entry.getValue(), 0 , i++);
+		}
 	}
 	
 	//TODO initialize objects with entered data
@@ -199,9 +257,22 @@ public class Output extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("btnNext")) {
-			CloseFrame();
-			Output outputFrame = new Output();
-			outputFrame.setVisible(true);
+			if (GUI.brain.simulate()) {
+			
+				updateROB();
+				updateScoreBoard();
+				updateRegisterStatus();
+				updateRegisterFile();
+			}
+			else {
+				CloseFrame();
+				Results results = new Results();
+				results.setVisible(true);
+			}
+			
+			//CloseFrame();
+			//Output outputFrame = new Output();
+			//outputFrame.setVisible(true);
 		}
 		
 	}
