@@ -21,7 +21,6 @@ public class Cache {
 		this.accessTime = accessTime;
 		this.writeBack = writeBack;
 		this.setSize = blockNum / assoc;
-		this.iHit = this.iMiss = this.dHit = this.dMiss = 0;
 	}
 
 	public void addInstructions(int address, String[] data) {
@@ -62,7 +61,7 @@ public class Cache {
 		}
 		if(entry == null)
 			iMiss++;
-		
+
 		return entry;
 	}
 
@@ -96,6 +95,10 @@ public class Cache {
 		
 		dCache[place] = entry;
 	}
+	
+	public void updateData(int address, Integer data) {
+		
+	}
 
 	public DCacheEntry fetchData(int address) {
 		Address ad = new Address(address);
@@ -113,10 +116,12 @@ public class Cache {
 		}
 		if(entry == null)
 			dMiss++;
+
 		
 		return entry;
 	}
 	
+
 	public int getiHit() {
 		return iHit;
 	}
@@ -140,7 +145,7 @@ public class Cache {
 	public boolean isWriteBack() {
 		return writeBack;
 	}
-	
+
 	public String toString() {
 		String s = "";
 		s += "ICache: \n";

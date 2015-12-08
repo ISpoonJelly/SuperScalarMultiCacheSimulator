@@ -6,7 +6,14 @@ import java.util.Map;
 public class ROB {
 	ROBEntry[] rob;
 	int head, tail, entriesCount;
+	int size;
+	public ROBEntry[] getROBEntry(){
+		return rob;
+	}
 	
+	public void setROBEntry(ROBEntry i, int index){
+		rob[index] = i;
+	}
 	public int getHead() {
 		return head;
 	}
@@ -27,12 +34,24 @@ public class ROB {
 		rob = new ROBEntry[robSize+1];
 		head = tail = 1;
 		entriesCount = 0;
+		this.size = robSize;
+	}
+	public int getSize(){
+		return size;
 	}
 	
 	
 	
 	public boolean isFull() {
 		return entriesCount == rob.length-1;
+	}
+	
+	public boolean isEmpty(){
+		for(int i = 1; i<rob.length-1; i++){
+			if(rob[i] != null)
+				return false;
+		}
+		return true;
 	}
 	
 	public void setValue(int entryIndex, Integer value) {

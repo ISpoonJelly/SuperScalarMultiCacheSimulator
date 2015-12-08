@@ -107,7 +107,7 @@ public class WriteHandler {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		int result = regB * regC;
-		SuperScalar.registerFile.setRegister(list[1], result);
+		//SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
@@ -140,7 +140,7 @@ public class WriteHandler {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		int result = regB - regC;
-		SuperScalar.registerFile.setRegister(list[1], result);
+		//SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
@@ -167,7 +167,7 @@ public class WriteHandler {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		int result = regB + regC;
-		SuperScalar.registerFile.setRegister(list[1], result);
+		//SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
@@ -198,7 +198,7 @@ public class WriteHandler {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		int result = ~(regB & regC);
-		SuperScalar.registerFile.setRegister(list[1], result);
+		//SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
@@ -229,7 +229,7 @@ public class WriteHandler {
 		int ROBNum = SuperScalar.scoreboard.getScoreBoard()
 				.get(stageInstr.getScoreKey()).getDestination();
 		int result = regB + regC;
-		SuperScalar.registerFile.setRegister(list[1], result);
+		//SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
@@ -273,7 +273,7 @@ public class WriteHandler {
 		else {
 			SuperScalar.PC = Integer.parseInt(vk);
 		}
-		SuperScalar.registerFile.setRegister(list[1], result);
+		//SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);
@@ -356,7 +356,7 @@ public class WriteHandler {
 			result = Integer.parseInt(vj);
 		}*/
 		
-		SuperScalar.registerFile.setRegister(list[1], result);
+		//SuperScalar.registerFile.setRegister(list[1], result);
 		SuperScalar.registerStatus.remove(list[1]);
 		SuperScalar.rob.setValue(ROBNum, result);
 		SuperScalar.rob.setReady(ROBNum, true);

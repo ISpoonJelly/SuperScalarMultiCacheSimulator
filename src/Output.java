@@ -185,9 +185,9 @@ public class Output extends JFrame implements ActionListener {
 	}
 	
 	public void updateROB() {
-		for (int i =1; i < SuperScalar.rob..length; i++) {
+		//for (int i =1; i < SuperScalar.rob..length; i++) {
 			
-		}
+		//}
 	}
 	
 	//TODO initialize objects with entered data

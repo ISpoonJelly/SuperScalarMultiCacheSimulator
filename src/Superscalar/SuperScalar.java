@@ -11,8 +11,7 @@ import instructions.WriteHandler;
 public class SuperScalar {
 
 	// Give stageRegisters size of instructions
-	public static AfterBranchInstrRegister afterBranchInstr = new AfterBranchInstrRegister(
-			3);
+	public static AfterBranchInstrRegister afterBranchInstr = new AfterBranchInstrRegister();
 	public static StageRegister issueReg;
 	public static StageRegister executeReg;
 	public static StageRegister writeReg;
@@ -53,6 +52,23 @@ public class SuperScalar {
 		superNumber = sn;
 	}
 
+	public SuperScalar(int sn, RegisterFile registerFile,
+			CacheHandler cHandler, WriteCycles writeCycles,
+			ExecuteCycles execCycles, ROB rob, ScoreBoard scoreBoard, RegisterStatus registerStatus) {
+		issueReg = new StageRegister();
+		executeReg = new StageRegister();
+		writeReg = new StageRegister();
+		commitReg = new StageRegister();
+		superNumber = sn;
+		this.registerFile = registerFile;
+		this.cacheHandler = cHandler;
+		this.writeCycles = writeCycles;
+		this.execCycles = execCycles;
+		this.rob = rob;
+		this.scoreboard = scoreBoard;
+
+	}
+
 	public void fetch(String[] instructions) {
 		HashMap<Integer, StageInstruction> temp = new HashMap<Integer, StageInstruction>();
 		int originalPC = PC;
@@ -70,14 +86,11 @@ public class SuperScalar {
 				else
 					PC++;
 				System.out.println(PC + " -- PC");
-			}
-			else if(list[0].equals("jmp") || list[0].equals("jalr")){
+			} else if (list[0].equals("jmp") || list[0].equals("jalr")) {
 				issueReg.setStageInstructions(temp);
-			}
-			else if(list[0].equals("ret")){
+			} else if (list[0].equals("ret")) {
 				issueReg.setStageInstructions(temp);
-			}
-			else
+			} else
 				PC++;
 			issueReg.setStageInstructions(temp);
 
@@ -91,11 +104,11 @@ public class SuperScalar {
 
 		// System.out.println(issueReg);
 		System.out.println(SuperScalar.jumpFound + " Jump");
-		if(SuperScalar.jumpFound){
+		if (SuperScalar.jumpFound) {
 			System.out.println("JUMP FOUND");
 			return;
 		}
-		if(SuperScalar.returnFound){
+		if (SuperScalar.returnFound) {
 			return;
 		}
 		if (!SuperScalar.jumpFound && !SuperScalar.returnFound) {
@@ -255,16 +268,15 @@ public class SuperScalar {
 
 		// String[] instructions = {"sub R5 R5 R3", "mul R1 R5 R3",
 		// "lw R1 R2 1"};
-		String[] instructions = { "jmp R7 1", "beq R2 R3 -1",
-				"nand R1 R2 R3" };
-		afterBranchInstr = new AfterBranchInstrRegister(instructions.length);
+		String[] instructions = { "jmp R7 1", "beq R2 R3 -1", "nand R1 R2 R3" };
+		afterBranchInstr = new AfterBranchInstrRegister();
 		s.fetch(instructions);
 		s.issue();
 		System.out.println(branchFound + " Branch Found");
 		System.out.println(afterBranchInstr);
 		System.out.println(s);
 		System.out.println("---------------------");
-		//s.issue();
+		// s.issue();
 		s.execute();
 		System.out.println(numberOfBranches + " -- " + mispredictedBranches
 				+ " Misprediction");
