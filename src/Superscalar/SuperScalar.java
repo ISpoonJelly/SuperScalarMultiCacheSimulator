@@ -40,7 +40,8 @@ public class SuperScalar {
 	public static CacheHandler cacheHandler = new CacheHandler();
 	public static int PC = 0;
 	public static int count = 0;
-	public static ExecuteCycles execCycles = new ExecuteCycles(2, 1, 1, 2, 1, 2, 5);
+	public static ExecuteCycles execCycles = new ExecuteCycles(2, 1, 1, 2, 1,
+			2, 5);
 	public static IssueCycles issueCycles = new IssueCycles();
 	public static WriteCycles writeCycles = new WriteCycles(4);
 
@@ -52,8 +53,10 @@ public class SuperScalar {
 		superNumber = sn;
 	}
 
-	public SuperScalar(int sn, RegisterFile registerFile, CacheHandler cHandler, WriteCycles writeCycles,
-			ExecuteCycles execCycles, ROB rob, ScoreBoard scoreBoard, RegisterStatus registerStatus) {
+	public SuperScalar(int sn, RegisterFile registerFile,
+			CacheHandler cHandler, WriteCycles writeCycles,
+			ExecuteCycles execCycles, ROB rob, ScoreBoard scoreBoard,
+			RegisterStatus registerStatus) {
 		issueReg = new StageRegister();
 		executeReg = new StageRegister();
 		writeReg = new StageRegister();
@@ -70,14 +73,15 @@ public class SuperScalar {
 
 	public void fetch() {
 		HashMap<Integer, StageInstruction> temp = new HashMap<Integer, StageInstruction>();
-		//int originalPC = PC;
+		// int originalPC = PC;
 		if (!NO_MORE_INSTRUCTIONS) {
 			for (int i = 0; i < superNumber; i++) {
 				String fetched = cacheHandler.fetchInstruction(PC);
-				String[] list = fetched.split(" ");
+
 				if (fetched == null || fetched.length() == 0) {
 					NO_MORE_INSTRUCTIONS = true;
 				} else {
+					String[] list = fetched.split(" ");
 					temp.put(count++, new StageInstruction(fetched, false, 1));
 					if (list[0].equals("beq")) {
 						numberOfBranches++;
@@ -86,12 +90,12 @@ public class SuperScalar {
 							PC = PC + imm;
 						else
 							PC++;
-						//System.out.println(PC + " -- PC");
+						// System.out.println(PC + " -- PC");
 					} else if (list[0].equals("jmp") || list[0].equals("jalr")) {
 						issueReg.setStageInstructions(temp);
 					} else if (list[0].equals("ret")) {
 						issueReg.setStageInstructions(temp);
-					} else{
+					} else {
 						PC++;
 						issueReg.setStageInstructions(temp);
 					}
@@ -99,6 +103,7 @@ public class SuperScalar {
 				}
 				//
 			}
+			System.out.println(issueReg + " ISSUE REG");
 		}
 		/*
 		 * for (int i = PC; i < Math.min(originalPC + superNumber,
@@ -134,23 +139,28 @@ public class SuperScalar {
 			return;
 		}
 		if (!SuperScalar.jumpFound && !SuperScalar.returnFound) {
-			//System.out.println("ENTERED ");
+			// System.out.println("ENTERED ");
+			int count = 1;
 			for (int i = 0; i < superNumber; i++) {
+				System.out.println(count++ + " No. of Issued Instr");
 				StageInstruction first = issueReg.returnFirst();
 
 				// System.out.println(first.instruction);
 				if (first != null) {
-					//System.out.println("FIRST CYCLE " + first.cycles);
-					StageInstruction inst = issueHandler.decode(first, first.cycles);
+					// System.out.println("FIRST CYCLE " + first.cycles);
+					StageInstruction inst = issueHandler.decode(first,
+							first.cycles);
 					if (inst != null) {
 						inst.cycles--;
 						if (inst.cycles == 0) {
 							issueReg.getStageInstructions().put(i, null);
-							inst.setCycles(execCycles.getExcuteCycles(inst.getInstruction()));
+							inst.setCycles(execCycles.getExcuteCycles(inst
+									.getInstruction()));
 							executeReg.getStageInstructions().put(i, inst);
+							System.out.println("Added to Execu " + count);
 						}
-//						System.out.println(issueReg);
-//						System.out.println(executeReg);
+						// System.out.println(issueReg);
+						// System.out.println(executeReg);
 
 					}
 
@@ -174,23 +184,38 @@ public class SuperScalar {
 		 * not
 		 */
 		StageInstruction[] instr = executeReg.returnReadyInstructions();
+		System.out.println("--------Execute Reg--------");
+		System.out.println(executeReg);
+		System.out.println(instr.length + " Length of ready");
 		for (int i = 0; i < instr.length; i++) {
-			if (SuperScalar.scoreboard.getScoreBoard().get(instr[i].getScoreKey()) != null) {
-				Integer qj = SuperScalar.scoreboard.getScoreBoard().get(instr[i].getScoreKey()).getQj();
-				Integer qk = SuperScalar.scoreboard.getScoreBoard().get(instr[i].getScoreKey()).getQk();
+			if (SuperScalar.scoreboard.getScoreBoard().get(
+					instr[i].getScoreKey()) != null) {
+				Integer qj = SuperScalar.scoreboard.getScoreBoard()
+						.get(instr[i].getScoreKey()).getQj();
+				Integer qk = SuperScalar.scoreboard.getScoreBoard()
+						.get(instr[i].getScoreKey()).getQk();
+				System.out.println(instr[i].getScoreKey());
+				System.out.println("QK: " + qk);
+				System.out.println("QJ: " + qj);
 				if (qk == null && qj == null) {
-					if (execCycles.getExcuteCycles(instr[i].getInstruction()) == instr[i].cycles)
-						executeHandler.decode(instr[i]);
+					System.out.println("Entered Null both"
+							+ instr[i].getScoreKey());
+					//System.out.println(execCycles.getExcuteCycles(instr[i]
+						//	.getInstruction()) + " = " + instr[i].cycles);
+					System.out.println(executeHandler.decode(instr[i]) + " Decode Exec Result");
+					System.out.println(instr[i].cycles + " CYCLES");
 					instr[i].cycles--;
 
 					if (instr[i].cycles == 0) {
 						Integer ind = executeReg.findIndex(instr[i]);
 						StageInstruction stageInstr = instr[i];
-//						System.out.println(stageInstr.instruction + "Stage");
+						// System.out.println(stageInstr.instruction + "Stage");
 						executeReg.getStageInstructions().put(ind, null);
-						stageInstr.setCycles(writeCycles.getWriteCycles(stageInstr.getInstruction()));
+						stageInstr.setCycles(writeCycles
+								.getWriteCycles(stageInstr.getInstruction()));
 						writeReg.getStageInstructions().put(ind, stageInstr);
-//						System.out.println("FIND INDEX " + ind + "  " + stageInstr.instruction);
+						// System.out.println("FIND INDEX " + ind + "  " +
+						// stageInstr.instruction);
 
 					}
 					// executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]),
@@ -198,12 +223,13 @@ public class SuperScalar {
 
 				} else {
 					instr[i].setStalled(true);
-					executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]), instr[i]);
+					executeReg.getStageInstructions().put(
+							executeReg.findIndex(instr[i]), instr[i]);
 				}
 			}
 		}
-//		System.out.println("WRITE REG");
-//		System.out.println(writeReg);
+		// System.out.println("WRITE REG");
+		// System.out.println(writeReg);
 	}
 
 	/*
@@ -230,20 +256,29 @@ public class SuperScalar {
 			for (int i = superNumber; i < instr.length; i++) {
 				StageInstruction ready = instr[i];
 				ready.setStalled(true);
-				writeReg.getStageInstructions().put(writeReg.findIndex(instr[i]), ready);
+				writeReg.getStageInstructions().put(
+						writeReg.findIndex(instr[i]), ready);
 			}
 		}
 	}
 
 	public void commit() {
 		StageInstruction[] instr = commitReg.returnReadyInstructions();
+		System.out.println(instr.length + " COMMIT READY INSTRUCTION LENGTH");
 		for (int i = 0; i < Math.min(superNumber, instr.length); i++) {
 			StageInstruction first = instr[i];
-			if (first.getScoreEntry().getDestination() == rob.getHead() && commitHandler.decode(first))
-				commitReg.getStageInstructions().put(commitReg.findIndex(instr[i]), null);
-			else {
+			System.out.println((first.getScoreEntry().getDestination() == rob
+					.getHead()) + " ON HEAD!");
+			if (first.getScoreEntry().getDestination() == rob.getHead()
+					&& commitHandler.decode(first)) {
+				System.out.println(commitReg.findIndex(first)
+						+ " INDEX of INSTR");
+				commitReg.getStageInstructions().put(
+						commitReg.findIndex(first), null);
+			} else {
 				first.setStalled(true);
-				commitReg.getStageInstructions().put(commitReg.findIndex(instr[i]), first);
+				commitReg.getStageInstructions().put(
+						commitReg.findIndex(instr[i]), first);
 			}
 		}
 
@@ -280,26 +315,27 @@ public class SuperScalar {
 		// "lw R1 R2 1"};
 		String[] instructions = { "jmp R7 1", "beq R2 R3 -1", "nand R1 R2 R3" };
 		afterBranchInstr = new AfterBranchInstrRegister();
-		//s.fetch(instructions);
+		// s.fetch(instructions);
 		s.fetch();
 		s.issue();
-//		System.out.println(branchFound + " Branch Found");
-//		System.out.println(afterBranchInstr);
-//		System.out.println(s);
-//		System.out.println("---------------------");
+		// System.out.println(branchFound + " Branch Found");
+		// System.out.println(afterBranchInstr);
+		// System.out.println(s);
+		// System.out.println("---------------------");
 		// s.issue();
 		s.execute();
-		//System.out.println(numberOfBranches + " -- " + mispredictedBranches + " Misprediction");
-		//System.out.println(PC + " -- Afterbranch PC");
-//		System.out.println(s);
+		// System.out.println(numberOfBranches + " -- " + mispredictedBranches +
+		// " Misprediction");
+		// System.out.println(PC + " -- Afterbranch PC");
+		// System.out.println(s);
 		s.write();
-//		System.out.println(s);
+		// System.out.println(s);
 		s.commit();
-//		System.out.println(s);
-		//s.fetch(instructions);
+		// System.out.println(s);
+		// s.fetch(instructions);
 		s.fetch();
 		s.issue();
-//		System.out.println(s);
+		// System.out.println(s);
 
 	}
 

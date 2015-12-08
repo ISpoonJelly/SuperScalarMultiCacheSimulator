@@ -594,6 +594,7 @@ public class IssueHandler {
 		if (!freeROB()) {
 			return null;
 		}
+		System.out.println("FREE ROB HEREE!!");
 		int fu = SuperScalar.scoreboard.freeFunctionalUnit("add",
 				SuperScalar.scoreboard.getAdd());
 		if (fu == -1) {

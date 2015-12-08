@@ -52,7 +52,6 @@ public class ROBEntry {
 	
 	public String toString() {
 		String s = type + " -- " + dest + " -- " + value + " -- " + ready;
-		
 		return s;
 	}
 	

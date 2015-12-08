@@ -41,6 +41,7 @@ public class Output extends JFrame implements ActionListener {
 	private JTable registerFileTable;
 	private JScrollPane scrollPane_1;
 	private JButton btnNext; 
+	private JLabel cycleNo;
 	
 	
 
@@ -75,7 +76,7 @@ public class Output extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel cycleNo = new JLabel("Cycle No. : " + GUI.Cycles++);
+		cycleNo = new JLabel("Cycle No. : " + GUI.Cycles++);
 		cycleNo.setForeground(Color.BLUE);
 		cycleNo.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 		cycleNo.setBounds(24, 20, 150, 16);
@@ -84,7 +85,7 @@ public class Output extends JFrame implements ActionListener {
 		JLabel lblScoreboard = new JLabel("ScoreBoard");
 		lblScoreboard.setFont(new Font("Lucida Grande", Font.BOLD, 14));
 		lblScoreboard.setForeground(Color.DARK_GRAY);
-		lblScoreboard.setBounds(24, 49, 150, 16);
+		lblScoreboard.setBounds(24, 49, 200, 16);
 		contentPane.add(lblScoreboard);
 		
 		String [] cols = {"FU", "Busy", "Op", "Vj", "Vk", "Qj", "Qk", "Dest", "A"};
@@ -192,6 +193,16 @@ public class Output extends JFrame implements ActionListener {
 				tableScoreboard.setValueAt(entryData.getA(), i, 8);
 
 			}
+			else {
+				tableScoreboard.setValueAt("", i, 2);
+				tableScoreboard.setValueAt("", i, 3);
+				tableScoreboard.setValueAt("", i, 4);
+				tableScoreboard.setValueAt("", i, 5);
+				tableScoreboard.setValueAt("", i, 6);
+				tableScoreboard.setValueAt("", i, 7);
+				tableScoreboard.setValueAt("", i, 8);
+				
+			}
 			
 			i++;
 			
@@ -227,25 +238,42 @@ public class Output extends JFrame implements ActionListener {
 	}
 	
 	public void updateRegisterStatus() {
-		Iterator<Map.Entry<String, Integer>> iterator = SuperScalar.registerStatus.getRegStatus()
+		/*Iterator<Map.Entry<String, Integer>> iterator = SuperScalar.registerStatus.getRegStatus()
 				.entrySet().iterator();
 
 		int i = 0;
 		while (iterator.hasNext()) {
 			Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator.next();
 			registerStatusTable.setValueAt(entry.getValue(), 0 , i++);
-		}
+		}*/
+		registerStatusTable.setValueAt(SuperScalar.registerStatus.getRegStatus().get("R0"), 0, 0);
+		registerStatusTable.setValueAt(SuperScalar.registerStatus.getRegStatus().get("R1"), 0, 1);
+		registerStatusTable.setValueAt(SuperScalar.registerStatus.getRegStatus().get("R2"), 0, 2);
+		registerStatusTable.setValueAt(SuperScalar.registerStatus.getRegStatus().get("R3"), 0, 3);
+		registerStatusTable.setValueAt(SuperScalar.registerStatus.getRegStatus().get("R4"), 0, 4);
+		registerStatusTable.setValueAt(SuperScalar.registerStatus.getRegStatus().get("R5"), 0, 5);
+		registerStatusTable.setValueAt(SuperScalar.registerStatus.getRegStatus().get("R6"), 0, 6);
+		registerStatusTable.setValueAt(SuperScalar.registerStatus.getRegStatus().get("R7"), 0, 7);
 	}
 	
 	public void updateRegisterFile() {
-		Iterator<Map.Entry<String, Integer>> iterator = SuperScalar.registerFile.getRegisterFile()
+		/*Iterator<Map.Entry<String, Integer>> iterator = SuperScalar.registerFile.getRegisterFile()
 				.entrySet().iterator();
 
 		int i = 0;
 		while (iterator.hasNext()) {
 			Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator.next();
 			registerFileTable.setValueAt(entry.getValue(), 0 , i++);
-		}
+		}*/
+		
+		registerFileTable.setValueAt(SuperScalar.registerFile.getRegisterFile().get("R0"), 0, 0);
+		registerFileTable.setValueAt(SuperScalar.registerFile.getRegisterFile().get("R1"), 0, 1);
+		registerFileTable.setValueAt(SuperScalar.registerFile.getRegisterFile().get("R2"), 0, 2);
+		registerFileTable.setValueAt(SuperScalar.registerFile.getRegisterFile().get("R3"), 0, 3);
+		registerFileTable.setValueAt(SuperScalar.registerFile.getRegisterFile().get("R4"), 0, 4);
+		registerFileTable.setValueAt(SuperScalar.registerFile.getRegisterFile().get("R5"), 0, 5);
+		registerFileTable.setValueAt(SuperScalar.registerFile.getRegisterFile().get("R6"), 0, 6);
+		registerFileTable.setValueAt(SuperScalar.registerFile.getRegisterFile().get("R7"), 0, 7);
 	}
 	
 	//TODO initialize objects with entered data
@@ -256,12 +284,17 @@ public class Output extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("btnNext")) {
-			if (GUI.brain.simulate()) {
+		if (e.getActionCommand().equals("nextCycle")) {
+			boolean ch = GUI.brain.simulate();
+			System.out.println(ch);
+			if (ch) {
+				System.out.println("UPDATED");
 				updateROB();
 				updateScoreBoard();
 				updateRegisterStatus();
 				updateRegisterFile();
+				cycleNo.setText("Cycle No. : "  + GUI.Cycles++ + "");
+				
 			}
 			else {
 				CloseFrame();

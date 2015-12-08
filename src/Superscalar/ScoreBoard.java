@@ -187,11 +187,13 @@ public class ScoreBoard {
 					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
+				SuperScalar.executeReg.update(result, "Qj", l);
 			}
 			if (scoreBoard.get(l).getQk() != null
 					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
+				SuperScalar.executeReg.update(result, "Qk", l);
 			}
 		}
 
@@ -203,11 +205,13 @@ public class ScoreBoard {
 					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
+				SuperScalar.executeReg.update(result, "Qj", l);
 			}
 			if (scoreBoard.get(l).getQk() != null
 					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
+				SuperScalar.executeReg.update(result, "Qk", l);
 			}
 		}
 
@@ -219,10 +223,12 @@ public class ScoreBoard {
 					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
+				SuperScalar.executeReg.update(result, "Qj", l);
 			}
 			if (scoreBoard.get(l).getQk() != null
 					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
+				SuperScalar.executeReg.update(result, "Qk", l);
 				scoreBoard.get(l).setQk(null);
 			}
 		}
@@ -234,11 +240,14 @@ public class ScoreBoard {
 					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
 				scoreBoard.get(l).setQj(null);
+				SuperScalar.executeReg.update(result, "Qj", l);
+				
 			}
 			if (scoreBoard.get(l).getQk() != null
 					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
 				scoreBoard.get(l).setQk(null);
+				SuperScalar.executeReg.update(result, "Qk", l);
 			}
 		}
 
@@ -261,11 +270,13 @@ public class ScoreBoard {
 			if (scoreBoard.get(l).getQj() != null
 					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
+				SuperScalar.executeReg.update(result, "Qj", l);
 				scoreBoard.get(l).setQj(null);
 			}
 			if (scoreBoard.get(l).getQk() != null
 					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
+				SuperScalar.executeReg.update(result, "Qk", l);
 				scoreBoard.get(l).setQk(null);
 			}
 		}
@@ -276,11 +287,13 @@ public class ScoreBoard {
 			if (scoreBoard.get(l).getQj() != null
 					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
+				SuperScalar.executeReg.update(result, "Qj", l);
 				scoreBoard.get(l).setQj(null);
 			}
 			if (scoreBoard.get(l).getQk() != null
 					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
+				SuperScalar.executeReg.update(result, "Qk", l);
 				scoreBoard.get(l).setQk(null);
 			}
 		}
@@ -290,11 +303,13 @@ public class ScoreBoard {
 			if (scoreBoard.get(l).getQj() != null
 					&& scoreBoard.get(l).getQj() == rOBNum) {
 				scoreBoard.get(l).setVj(result + "");
+				SuperScalar.executeReg.update(result, "Qj", l);
 				scoreBoard.get(l).setQj(null);
 			}
 			if (scoreBoard.get(l).getQk() != null
 					&& scoreBoard.get(l).getQk() == rOBNum) {
 				scoreBoard.get(l).setVk(result + "");
+				SuperScalar.executeReg.update(result, "Qk", l);
 				scoreBoard.get(l).setQk(null);
 			}
 		}

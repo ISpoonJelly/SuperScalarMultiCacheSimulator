@@ -40,14 +40,16 @@ public class ROB {
 		return size;
 	}
 	
-	
-	
 	public boolean isFull() {
-		return entriesCount == rob.length-1;
+		for(int i = 1; i<rob.length; i++){
+			if(rob[i] == null) return false;
+		}
+		return true;
 	}
 	
 	public boolean isEmpty(){
-		for(int i = 1; i<rob.length-1; i++){
+		for(int i = 1; i<rob.length; i++){
+			//System.out.println(rob[i].toString() + " ROB " + i);
 			if(rob[i] != null)
 				return false;
 		}
@@ -94,7 +96,7 @@ public class ROB {
 		rob[index] = null;
 		entriesCount-- ;
 		head++;
-		if ( (head == rob.length-1)) 
+		if ((head == rob.length-1)) 
 			head = 1;
 	}
 	

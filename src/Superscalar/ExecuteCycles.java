@@ -2,17 +2,17 @@ package Superscalar;
 
 public class ExecuteCycles {
 
-	public static int LOAD = 1;
-	public static int STORE = 2;
-	public static int JUMP = 3;
-	public static int BRANCH = 4;
-	public static int JUMP_AND_LINK = 5;
-	public static int RETURN = 6;
-	public static int ADD = 7;
-	public static int SUBTRACT = 8;
-	public static int ADD_I = 9;
-	public static int NAND = 10;
-	public static int MULTIPLY = 11;
+	public static int LOAD;
+	public static int STORE;
+	public static int JUMP;
+	public static int BRANCH;
+	public static int JUMP_AND_LINK;
+	public static int RETURN;
+	public static int ADD;
+	public static int SUBTRACT;
+	public static int ADD_I;
+	public static int NAND;
+	public static int MULTIPLY;
 
 	public ExecuteCycles(int load, int store, int jump, int ret, int add,
 			int nand, int mult) {
@@ -35,27 +35,27 @@ public class ExecuteCycles {
 		String[] list = instr.split(" ");
 		switch (list[0]) {
 		case "add":
-			return this.ADD;
+			return ADD;
 		case "lw":
-			return this.LOAD;
+			return LOAD;
 		case "sw":
-			return this.STORE;
+			return STORE;
 		case "jmp":
-			return this.JUMP;
+			return JUMP;
 		case "jalr":
-			return this.JUMP_AND_LINK;
+			return JUMP_AND_LINK;
 		case "ret":
-			return this.RETURN;
+			return RETURN;
 		case "nand":
-			return this.NAND;
+			return NAND;
 		case "addi":
-			return this.ADD_I;
+			return ADD_I;
 		case "sub":
-			return this.SUBTRACT;
+			return SUBTRACT;
 		case "mul":
-			return this.MULTIPLY;
+			return MULTIPLY;
 		case "beq":
-			return this.BRANCH;
+			return BRANCH;
 		}
 		return -1;
 	}
