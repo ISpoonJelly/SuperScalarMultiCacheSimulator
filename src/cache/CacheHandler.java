@@ -22,30 +22,26 @@ public class CacheHandler {
 	}
 	
 	public String fetchInstruction(int address) {
-		System.out.println("Address in!! " + address);
 		String[] result = null;
-		Address adr = new Address(address);
-		int offset = adr.getOffset(cacheBlockSize);
+		Address adr = new Address(address, cacheBlockSize, -1, -1);
+		int offset = adr.getOffset();
 		
 		int i = caches.length - 1;
 		while(i >= 0){
 			ICacheEntry instructions = caches[i].fetchInstructions(address);
 			if(instructions != null) {
 				result = instructions.getData();
-				for (int j = 0; j < result.length; j++) {
-					System.out.print(result[j]+",");
-				}
+				System.out.println("got instruction from cache when address was " + address);
 				break;
 			}
 			i--;
 		}
 		
 		if(result == null) {
+			System.out.println("got instruction from memory when address was " + address);
 			result = memory.fetchInstruction(address, cacheBlockSize);
-			i = 0;
 		}
-		System.out.println("loaded, instruction: " + result[offset]);
-		System.out.println("offset: " + offset);
+		i++;
 		
 		while(i < caches.length) {
 			Cache cache = caches[i];
@@ -58,8 +54,8 @@ public class CacheHandler {
 	
 	public Integer fetchData(int address) {
 		Integer[] result = null;
-		Address adr = new Address(address);
-		int offset = adr.getOffset(cacheBlockSize);
+		Address adr = new Address(address, cacheBlockSize, -1, -1);
+		int offset = adr.getOffset();
 		
 		int i = caches.length - 1;
 		while(i >= 0){
@@ -86,8 +82,8 @@ public class CacheHandler {
 	}
 	
 	public void updateData(int address, Integer data){
-		Address adr = new Address(address);
-		int offset = adr.getOffset(cacheBlockSize);
+		Address adr = new Address(address, cacheBlockSize, -1, -1);
+		int offset = adr.getOffset();
 		
 		boolean writeBack = false;
 		DCacheEntry found = null;
@@ -112,8 +108,8 @@ public class CacheHandler {
 	
 	public static void updateLowerLevels(int level, int address, Integer[] data) {
 		if(level == 0) {
-			Address adr = new Address(address);
-			int offset = adr.getOffset(cacheBlockSize);
+			Address adr = new Address(address, cacheBlockSize, -1, -1);
+			int offset = adr.getOffset();
 			Integer value = data[offset];
 			
 			memory.addData(address, value);
@@ -133,7 +129,12 @@ public class CacheHandler {
 			}
 			result += hitTime * missRate;
 			if(i >= 0){
-				missRate *= caches[i].getiMiss() / (caches[i].getiHit() + caches[i].getiMiss());
+				Cache c = caches[i];
+				if(c.getiHit() == 0 || c.getiMiss() == 0) {
+					missRate *= 1;
+				} else {
+					missRate *= c.getiMiss() / (c.getdHit() + c.getiMiss());
+				}
 			}
 		}
 		return result;
@@ -151,7 +152,12 @@ public class CacheHandler {
 			}
 			result += hitTime * missRate;
 			if(i >= 0){
-				missRate *= caches[i].getdMiss() / (caches[i].getdHit() + caches[i].getdMiss());
+				Cache c = caches[i];
+				if(c.getdHit() == 0 || c.getdMiss() == 0) {
+					missRate *= 1;
+				} else {
+					missRate *= c.getdMiss() / (c.getdHit() + c.getdMiss());
+				}
 			}
 		}
 		return result;
@@ -167,7 +173,12 @@ public class CacheHandler {
 			} else {
 				hitTime = caches[i+1].getAccessTime();
 			}
-			missRate *= caches[i].getdMiss() / (caches[i].getdHit() + caches[i].getdMiss());
+			Cache c = caches[i];
+			if(c.getdHit() == 0 || c.getdMiss() == 0) {
+				missRate *= 1;
+			} else {
+				missRate *= caches[i].getdMiss() / (caches[i].getdHit() + caches[i].getdMiss());
+			}
 			result+=(memory.getDataInstructions()+1)*missRate*(hitTime/caches[0].getAccessTime());
 		}
 		return result;

@@ -13,6 +13,8 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import cache.CacheHandler;
+
 import Superscalar.SuperScalar;
 
 import java.awt.Font;
@@ -144,12 +146,23 @@ public class Results extends JFrame {
 		cacheHitRates.setBackground(Color.GRAY);
 		scrollPane_1.setViewportView(cacheHitRates);
 		for (int i = 0; i < numOfCaches; i++) {
-			double DHitRate = (SuperScalar.cacheHandler.getCaches()[i].getdHit()
-					/ (SuperScalar.cacheHandler.getCaches()[i].getdHit() + SuperScalar.cacheHandler
-							.getCaches()[i].getdMiss()))*100;
-			double IHitRate = (SuperScalar.cacheHandler.getCaches()[i].getiHit()
-					/ (SuperScalar.cacheHandler.getCaches()[i].getiHit() + SuperScalar.cacheHandler
-							.getCaches()[i].getiMiss()))*100;
+			double DHitRate;
+			int dHit = CacheHandler.getCaches()[i].getdHit();
+			int dMiss = CacheHandler.getCaches()[i].getdMiss();
+			if(dHit == 0 && dMiss == 0) {
+				DHitRate = 100;
+			} else {
+				DHitRate = (dHit / (dHit + dMiss)) * 100;
+			}
+			int iHit = CacheHandler.getCaches()[i].getiHit();
+			int iMiss = CacheHandler.getCaches()[i].getiMiss();
+			
+			double IHitRate;
+			if(iHit == 0 && iMiss == 0) {
+				IHitRate = 100;
+			} else {
+				IHitRate = (iHit/ (iHit + iMiss))*100;
+			}
 			cacheHitRates.setValueAt(i, i, 0);
 			cacheHitRates.setValueAt(DHitRate + "%", i, 1);
 			cacheHitRates.setValueAt(IHitRate + "%", i, 1);
