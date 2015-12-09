@@ -106,7 +106,7 @@ public class MainMemoryData extends JFrame implements ActionListener {
 			}
 			
 			GUI.brain = new Brain(GUI.superNumber, GUI.registerFile, GUI.cHanlder, GUI.writeCycles, GUI.execCycles,
-					GUI.rob, GUI.scoreboard, GUI.registerStatus);
+					GUI.rob, GUI.scoreboard, GUI.registerStatus, GUI.ORG);
 			CloseFrame();
 			Output output = new Output();
 			output.setVisible(true);

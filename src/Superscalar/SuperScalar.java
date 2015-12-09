@@ -38,7 +38,7 @@ public class SuperScalar {
 	public static WriteHandler writeHandler = new WriteHandler();
 	public static CommitHandler commitHandler = new CommitHandler();
 	public static CacheHandler cacheHandler = new CacheHandler();
-	public static int PC = 0;
+	public static int PC;
 	public static int count = 0;
 	public static ExecuteCycles execCycles;
 	public static IssueCycles issueCycles = new IssueCycles();
@@ -55,7 +55,7 @@ public class SuperScalar {
 	public SuperScalar(int sn, RegisterFile registerFile,
 			CacheHandler cHandler, WriteCycles writeCycles,
 			ExecuteCycles execCycles, ROB rob, ScoreBoard scoreBoard,
-			RegisterStatus registerStatus) {
+			RegisterStatus registerStatus, int org) {
 		issueReg = new StageRegister();
 		executeReg = new StageRegister();
 		writeReg = new StageRegister();
@@ -67,33 +67,47 @@ public class SuperScalar {
 		SuperScalar.execCycles = execCycles;
 		SuperScalar.rob = rob;
 		SuperScalar.scoreboard = scoreBoard;
+		PC = org;
 
 	}
 
 	public void fetch() {
 		HashMap<Integer, StageInstruction> temp = new HashMap<Integer, StageInstruction>();
 		// int originalPC = PC;
-		if (!NO_MORE_INSTRUCTIONS) {
+		if (!SuperScalar.jumpFound && !SuperScalar.returnFound) {
 			for (int i = 0; i < superNumber; i++) {
+				System.out.println(superNumber + " SUPERNUMBER");
 				String fetched = cacheHandler.fetchInstruction(PC);
+				System.out.println(cacheHandler.fetchInstruction(0) + " INSTR AT 0");
+				System.out.println(PC + ": " + fetched + " FETCHED INSTR");
 
 				if (fetched == null || fetched.length() == 0) {
+					//if(!)
 					NO_MORE_INSTRUCTIONS = true;
 				} else {
 					String[] list = fetched.split(" ");
 					temp.put(count++, new StageInstruction(fetched, false, 1));
 					if (list[0].equals("beq")) {
 						numberOfBranches++;
+						issueReg.setStageInstructions(temp);
 						int imm = Integer.parseInt(list[3]);
-						if (imm < 0)
+						
+						if (imm < 0){
 							PC = PC + imm;
+							System.out.println(list[0] + " HERE NOW");
+							System.out.println(PC + " PC after Branch");
+						}
 						else
 							PC++;
 						// System.out.println(PC + " -- PC");
 					} else if (list[0].equals("jmp") || list[0].equals("jalr")) {
 						issueReg.setStageInstructions(temp);
+						SuperScalar.jumpFound = true;
+						break;
 					} else if (list[0].equals("ret")) {
 						issueReg.setStageInstructions(temp);
+						SuperScalar.returnFound = true;
+						break;
 					} else {
 						PC++;
 						issueReg.setStageInstructions(temp);

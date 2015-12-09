@@ -2,9 +2,9 @@ package cache;
 
 public class Cache {
 	private int level, iHit, iMiss, dHit, dMiss;
-	private ICacheEntry[] iCache;
-	private DCacheEntry[] dCache;
-	private int blockNum, blockSize, assoc, setSize, accessTime;
+	private ICacheSet[] iCache;
+	private DCacheSet[] dCache;
+	private int blockNum, blockSize, assoc, setNum, accessTime;
 	public int getBlockSize() {
 		return blockSize;
 	}
@@ -14,109 +14,70 @@ public class Cache {
 	public Cache(int level, int CacheSize, int blockSize, int assoc, int accessTime, boolean writeBack) {
 		this.level = level;
 		this.blockNum = CacheSize/blockSize;
-		iCache = new ICacheEntry[blockNum];
-		dCache = new DCacheEntry[blockNum];
-		this.blockSize = blockSize;
 		this.assoc = assoc;
+		this.setNum = blockNum / assoc;
+		this.blockSize = blockSize;
 		this.accessTime = accessTime;
 		this.writeBack = writeBack;
-		this.setSize = blockNum / assoc;
+		iCache = new ICacheSet[setNum];
+		dCache = new DCacheSet[setNum];
+		initSets();
+	}
+	
+	private void initSets() {
+		for (int i = 0; i < setNum; i++) {
+			iCache[i] = new ICacheSet(assoc);
+			dCache[i] = new DCacheSet(assoc);
+		}
 	}
 
 	public void addInstructions(int address, String[] data) {
-		Address adr = new Address(address);
-		int index = adr.getIndex(blockSize, blockNum);
-		int tag = adr.getTag(blockSize, blockNum);
-		int set = index / (blockNum /assoc);
+		Address adr = new Address(address, blockSize, blockNum, assoc);
+		int index = adr.getIndex();
+		int tag = adr.getTag();
 		
-		ICacheEntry entry = new ICacheEntry(tag, data);
+		ICacheSet set = iCache[index];
 		
-		for (int i = set; i < set + setSize; i++) {
-			if(iCache[i] == null) {
-				iCache[i] = entry;
-				return;
-			}
-		}
-		
-		//replacing
-		int max = set + setSize - 1;
-		int place = (int)(Math.random() * (max - set)) + set;
-		
-		iCache[place] = entry;
+		set.addEntry(new ICacheEntry(tag, data));
 	}
 
 	public ICacheEntry fetchInstructions(int address) {
-		Address ad = new Address(address);
-		int index = ad.getIndex(blockSize, blockNum);
-		int tag = ad.getTag(blockSize, 0);
-		System.out.println("address here tag: " + tag);
-		int set = index / (blockNum /assoc);
+		Address ad = new Address(address, blockSize, blockNum, assoc);
+		int index = ad.getIndex();
+		int tag = ad.getTag();
 		
-		ICacheEntry entry = null;
-		int startingIndex = set * assoc;
-		for (int i = startingIndex; i < startingIndex + setSize; i++) {
-			if(iCache[i] != null && iCache[i].getTag() == tag) { 
-				System.out.println("found! here tag: " + tag);
-				entry = iCache[i];
-				iHit++;
-				break;
-			}
-		}
+		ICacheSet set = iCache[index];
+		ICacheEntry entry = set.getSet(tag);
+		
 		if(entry == null)
 			iMiss++;
-		System.out.println("ENTRY IS"+entry);
+		else 
+			iHit ++;
+		
 		return entry;
 	}
 
 	public void addData(int address, Integer[] data) {
-		Address adr = new Address(address);
-		int index = adr.getIndex(blockSize, blockNum);
-		int tag = adr.getTag(blockSize, blockNum);
-		int set = index / (blockNum /assoc);
-		
-		DCacheEntry entry = new DCacheEntry(tag, data);
-		
-		for (int i = set; i < set + setSize; i++) {
-			DCacheEntry found = dCache[i];
-			if(found == null) {
-				dCache[i] = entry;
-				return;
-			} else if(found.getTag() == tag){
-				found.setData(data);
-				CacheHandler.updateLowerLevels(level, address, data);
-				return;
-			}
-		}
-		
-		//replacing
-		int max = set + setSize - 1;
-		int place = (int)(Math.random() * (max - set)) + set;
-		
-		if(writeBack && entry.isDirty()){
-			CacheHandler.updateLowerLevels(level, address, data);
-		}
-		
-		dCache[place] = entry;
+		Address adr = new Address(address, blockSize, blockNum, assoc);
+		int index = adr.getIndex();
+		int tag = adr.getTag();
+
+		DCacheSet set = dCache[index];
+		set.addEntry(new DCacheEntry(tag, data), level, address, writeBack);
 	}
 
 	public DCacheEntry fetchData(int address) {
-		Address ad = new Address(address);
-		int index = ad.getIndex(blockSize, blockNum);
-		int tag = ad.getTag(blockSize, blockNum);
-		int set = index / (blockNum /assoc);
+		Address ad = new Address(address, blockSize, blockNum, assoc);
+		int index = ad.getIndex();
+		int tag = ad.getTag();
 		
-		DCacheEntry entry = null;
-		int startingIndex = set * assoc;
-		for (int i = startingIndex; i < startingIndex + setSize; i++) {
-			if(dCache[i] != null && dCache[i].getTag() == tag) {
-				entry = dCache[i];
-				dHit++;
-				break;
-			}
-		}
+		DCacheSet set = dCache[index];
+		DCacheEntry entry = set.getSet(tag);
+		
 		if(entry == null)
-			dMiss++;
-
+			iMiss++;
+		else 
+			iHit ++;
 		
 		return entry;
 	}
@@ -144,37 +105,5 @@ public class Cache {
 
 	public boolean isWriteBack() {
 		return writeBack;
-	}
-
-	public String toString() {
-		String s = "";
-		s += "ICache: \n";
-		for(int i = 0; i < blockNum; i++) {
-			ICacheEntry iEntry = iCache[i];
-			if(iEntry != null) {
-				s += "block Number: " + i + " || Tag: " + iEntry.getTag()+ " || dirty: " + iEntry.isDirty()+ " || data: " + iEntry.getData().toString();
-			} else {
-				s += "block Number: " + i + " || Empty";
-			}
-			s += "\n--------------------\n";
-		}
-		
-		s += "DCache: \n";
-		for(int i = 0; i < blockNum; i++) {
-			DCacheEntry dEntry = dCache[i];
-			if(dEntry != null) {
-				String data = "";
-				Integer[] dataArray = dEntry.getData();
-				for (int j = 0; j < dataArray.length; j++) {
-					data += dataArray[j] + ", ";
-				}
-				s += "block Number: " + i + " || Tag: " + dEntry.getTag()+ " || dirty: " + dEntry.isDirty()+ " || data: " + data;
-			} else {
-				s += "block Number: " + i + " || Empty";
-			}
-			s += "\n--------------------\n";
-		}
-		
-		return s;
 	}
 }

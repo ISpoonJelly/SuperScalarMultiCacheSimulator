@@ -9,9 +9,9 @@ public class Brain {
 
 	public Brain(int sn, RegisterFile registerFile, CacheHandler cHandler,
 			WriteCycles writeCycles, ExecuteCycles execCycles, ROB rob,
-			ScoreBoard scoreBoard, RegisterStatus registerStatus) {
+			ScoreBoard scoreBoard, RegisterStatus registerStatus, int org) {
 		superScalar = new SuperScalar(sn, registerFile, cHandler, writeCycles,
-				execCycles, rob, scoreBoard, registerStatus);
+				execCycles, rob, scoreBoard, registerStatus, org);
 		this.rob = rob;
 	}
 
@@ -31,7 +31,6 @@ public class Brain {
 			superScalar.write();
 			ScoreBoard commitWriteScoreBoard = copyScoreBoard(SuperScalar.scoreboard);
 			ROB commitWriteROB = copyROB(SuperScalar.rob);
-
 			System.out.println("----------------");
 			System.out.println("Commit Write ScoreBoard");
 			System.out.println(SuperScalar.scoreboard);

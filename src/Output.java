@@ -70,7 +70,7 @@ public class Output extends JFrame implements ActionListener {
 		
 		// GUI stuff
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 500);
+		setBounds(100, 100, 900, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -93,8 +93,8 @@ public class Output extends JFrame implements ActionListener {
 		Object [][] data = new Object[totalFU][9];
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(24, 77, 300, 165);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBounds(24, 77, 400, 165);
 		contentPane.add(scrollPane);
 		tableScoreboard = new JTable(data, cols);
 		scrollPane.setViewportView(tableScoreboard);
@@ -103,25 +103,28 @@ public class Output extends JFrame implements ActionListener {
 		tableScoreboard.setForeground(Color.BLACK);
 		tableScoreboard.setBackground(Color.PINK);
 		tableScoreboard.setBorder(new EmptyBorder(0, 0, 0, 0));
-		tableScoreboard.setColumnSelectionAllowed(true);
-		tableScoreboard.setCellSelectionEnabled(true);
+		tableScoreboard.setColumnSelectionAllowed(false);
+		tableScoreboard.setCellSelectionEnabled(false);
+		tableScoreboard.setEnabled(false);
 		
 		lblNewLabel = new JLabel("ROB");
 		lblNewLabel.setForeground(Color.DARK_GRAY);
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 14));
-		lblNewLabel.setBounds(375, 49, 61, 16);
+		lblNewLabel.setBounds(450, 49, 61, 16);
 		contentPane.add(lblNewLabel);
 		
 		scrollPanerob = new JScrollPane();
-		scrollPanerob.setBounds(375, 77, 300, 140);
+		scrollPanerob.setBounds(450, 77, 400, 140);
+		scrollPanerob.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		contentPane.add(scrollPanerob);
 		
 		String [] robCols = {"Head/Tail", "Id", "Dest", "Value", "Ready"};
 		Object [][] robData = new Object[GUI.ROB_SIZE][5];
 		robTable = new JTable(robData, robCols);
 		robTable.setFillsViewportHeight(true);
-		robTable.setCellSelectionEnabled(true);
-		robTable.setColumnSelectionAllowed(true);
+		robTable.setCellSelectionEnabled(false);
+		robTable.setColumnSelectionAllowed(false);
+		robTable.setEnabled(false);
 		robTable.setBackground(Color.LIGHT_GRAY);
 		scrollPanerob.setViewportView(robTable);
 		
@@ -138,6 +141,9 @@ public class Output extends JFrame implements ActionListener {
 		Object [][] registerStatusData = new Object[1][8];
 		registerStatusTable = new JTable(registerStatusData, registerStatusCols);
 		registerStatusTable.setBackground(Color.ORANGE);
+		registerStatusTable.setEnabled(false);
+		registerStatusTable.setCellSelectionEnabled(false);
+		registerStatusTable.setColumnSelectionAllowed(false);
 		scrollPaneRegisterStatus.setViewportView(registerStatusTable);
 		
 		lblRegisterFile = new JLabel("Register File");
@@ -154,6 +160,9 @@ public class Output extends JFrame implements ActionListener {
 		Object [][] registerFileData = new Object[1][8];
 		registerFileTable = new JTable(registerFileData, registerFileCols);
 		registerFileTable.setBackground(Color.GREEN);
+		registerFileTable.setEnabled(false);
+		registerFileTable.setCellSelectionEnabled(false);
+		registerFileTable.setColumnSelectionAllowed(false);
 		scrollPane_1.setViewportView(registerFileTable);
 		
 		btnNext = new JButton("Next Cycle");

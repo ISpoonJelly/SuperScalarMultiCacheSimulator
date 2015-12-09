@@ -35,8 +35,8 @@ public class MainMemory {
 	
 	public String[] fetchInstruction(int address, int blockSize) {
 		String[] result = new String[blockSize];
-		Address ad = new Address(address);
-		int offset = ad.getOffset(blockSize);
+		Address ad = new Address(address, blockSize, -1, -1);
+		int offset = ad.getOffset();
 		int startingAddress = address - offset;
 		
 		for (int i = 0; i < blockSize; i++) {
@@ -52,8 +52,8 @@ public class MainMemory {
 	
 	public Integer[] getData(int address, int blockSize) {
 		Integer[] result = new Integer[blockSize];
-		Address ad = new Address(address);
-		int offset = ad.getOffset(blockSize);
+		Address ad = new Address(address, blockSize, -1, -1);
+		int offset = ad.getOffset();
 		int startingAddress = address - offset;
 		
 		for (int i = 0; i < blockSize; i++) {
