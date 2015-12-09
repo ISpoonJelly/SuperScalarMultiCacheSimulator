@@ -52,6 +52,16 @@ public class StageRegister {
 
 		return null;
 	}
+	
+	public int returnFirstIndex() {
+		for (int i = 0; i < 1000; i++) {
+			if (stageInstructions.get(i) != null) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
 
 	public int numOfInstructions() {
 		int count = 0;

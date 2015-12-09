@@ -165,7 +165,7 @@ public class Results extends JFrame {
 			}
 			cacheHitRates.setValueAt(i, i, 0);
 			cacheHitRates.setValueAt(DHitRate + "%", i, 1);
-			cacheHitRates.setValueAt(IHitRate + "%", i, 1);
+			cacheHitRates.setValueAt(IHitRate + "%", i, 2);
 		}
 
 		lblFinallyWeAre = new JLabel("FINALLY WE ARE DONE!! ");

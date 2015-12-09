@@ -83,13 +83,18 @@ public class SuperScalar {
 
 				if (fetched == null || fetched.length() == 0) {
 					//if(!)
+					System.out.println("FINALLY EMPTY INSTR :')");
 					NO_MORE_INSTRUCTIONS = true;
+					//temp.put(count++, null);
+					issueReg.getStageInstructions().put(count++, null);
+					break;
 				} else {
 					String[] list = fetched.split(" ");
-					temp.put(count++, new StageInstruction(fetched, false, 1));
+					//temp.put(count++, new StageInstruction(fetched, false, 1));
 					if (list[0].equals("beq")) {
 						numberOfBranches++;
-						issueReg.setStageInstructions(temp);
+						//issueReg.setStageInstructions(temp);
+						issueReg.getStageInstructions().put(count++, new StageInstruction(fetched, false, 1));
 						int imm = Integer.parseInt(list[3]);
 						
 						if (imm < 0){
@@ -101,22 +106,26 @@ public class SuperScalar {
 							PC++;
 						// System.out.println(PC + " -- PC");
 					} else if (list[0].equals("jmp") || list[0].equals("jalr")) {
-						issueReg.setStageInstructions(temp);
+						//issueReg.setStageInstructions(temp);
+						issueReg.getStageInstructions().put(count++, new StageInstruction(fetched, false, 1));
 						SuperScalar.jumpFound = true;
 						break;
 					} else if (list[0].equals("ret")) {
-						issueReg.setStageInstructions(temp);
+						//issueReg.setStageInstructions(temp);
+						issueReg.getStageInstructions().put(count++, new StageInstruction(fetched, false, 1));
 						SuperScalar.returnFound = true;
 						break;
 					} else {
 						PC++;
-						issueReg.setStageInstructions(temp);
+						//issueReg.setStageInstructions(temp);
+						issueReg.getStageInstructions().put(count++, new StageInstruction(fetched, false, 1));
 					}
 
 				}
 				//
 			}
-			System.out.println(issueReg + " ISSUE REG");
+			System.out.println("----- Issue Register -----");
+			System.out.println(issueReg);
 		}
 		/*
 		 * for (int i = PC; i < Math.min(originalPC + superNumber,
@@ -157,6 +166,7 @@ public class SuperScalar {
 			for (int i = 0; i < superNumber; i++) {
 				System.out.println(count++ + " No. of Issued Instr");
 				StageInstruction first = issueReg.returnFirst();
+				int index = issueReg.returnFirstIndex();
 
 				// System.out.println(first.instruction);
 				if (first != null) {
@@ -166,10 +176,10 @@ public class SuperScalar {
 					if (inst != null) {
 						inst.cycles--;
 						if (inst.cycles == 0) {
-							issueReg.getStageInstructions().put(i, null);
+							issueReg.getStageInstructions().put(index, null);
 							inst.setCycles(execCycles.getExcuteCycles(inst
 									.getInstruction()));
-							executeReg.getStageInstructions().put(i, inst);
+							executeReg.getStageInstructions().put(index, inst);
 							System.out.println("Added to Execu " + count);
 						}
 						// System.out.println(issueReg);
