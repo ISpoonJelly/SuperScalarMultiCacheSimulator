@@ -96,7 +96,7 @@ public class ROB {
 		rob[index] = null;
 		entriesCount-- ;
 		head++;
-		if ((head == rob.length-1)) 
+		if ((head == rob.length)) 
 			head = 1;
 	}
 	

@@ -40,8 +40,7 @@ public class SuperScalar {
 	public static CacheHandler cacheHandler = new CacheHandler();
 	public static int PC = 0;
 	public static int count = 0;
-	public static ExecuteCycles execCycles = new ExecuteCycles(2, 1, 1, 2, 1,
-			2, 5);
+	public static ExecuteCycles execCycles;
 	public static IssueCycles issueCycles = new IssueCycles();
 	public static WriteCycles writeCycles = new WriteCycles(4);
 
@@ -200,17 +199,22 @@ public class SuperScalar {
 				if (qk == null && qj == null) {
 					System.out.println("Entered Null both"
 							+ instr[i].getScoreKey());
-					//System.out.println(execCycles.getExcuteCycles(instr[i]
-						//	.getInstruction()) + " = " + instr[i].cycles);
-					System.out.println(executeHandler.decode(instr[i]) + " Decode Exec Result");
+					// System.out.println(execCycles.getExcuteCycles(instr[i]
+					// .getInstruction()) + " = " + instr[i].cycles);
+					System.out.println(executeHandler.decode(instr[i])
+							+ " Decode Exec Result");
 					System.out.println(instr[i].cycles + " CYCLES");
 					instr[i].cycles--;
-
+					System.out.println(instr[i].cycles + " INSTRUCTION CYCLE");
 					if (instr[i].cycles == 0) {
+						System.out.println(instr[i].cycles + " INSTRUCTION CYCLE2");
 						Integer ind = executeReg.findIndex(instr[i]);
 						StageInstruction stageInstr = instr[i];
 						// System.out.println(stageInstr.instruction + "Stage");
 						executeReg.getStageInstructions().put(ind, null);
+						System.out.println("--Index Here--" + ind);
+						System.out.println("--------- Ececute Reg Here ---------");
+						System.out.println(executeReg);
 						stageInstr.setCycles(writeCycles
 								.getWriteCycles(stageInstr.getInstruction()));
 						writeReg.getStageInstructions().put(ind, stageInstr);
@@ -218,11 +222,15 @@ public class SuperScalar {
 						// stageInstr.instruction);
 
 					}
+					else {
+						executeReg.getStageInstructions().put(
+								executeReg.findIndex(instr[i]), instr[i]);
+					}
 					// executeReg.getStageInstructions().put(executeReg.findIndex(instr[i]),
 					// instr[i]);
 
 				} else {
-					instr[i].setStalled(true);
+					//instr[i].setStalled(true);
 					executeReg.getStageInstructions().put(
 							executeReg.findIndex(instr[i]), instr[i]);
 				}
@@ -244,10 +252,18 @@ public class SuperScalar {
 			if (writeHandler.decode(first) != null) {
 				first.cycles--;
 				if (first.cycles == 0) {
+					
 					Integer ind = writeReg.findIndex(instr[i]);
+					System.out.println("WRITE CYCLES " + ind);
+					System.out.println("-----Write Reg------");
+					System.out.println(SuperScalar.writeReg);
 					writeReg.getStageInstructions().put(ind, null);
 					first.setCycles(1);
 					commitReg.getStageInstructions().put(ind, first);
+				}
+				else {
+					writeReg.getStageInstructions().put(
+							writeReg.findIndex(instr[i]), first);
 				}
 			}
 		}
@@ -264,6 +280,9 @@ public class SuperScalar {
 
 	public void commit() {
 		StageInstruction[] instr = commitReg.returnReadyInstructions();
+		System.out.println("---Commit Reg-----");
+		System.out.println(SuperScalar.commitReg);
+		System.out.println();
 		System.out.println(instr.length + " COMMIT READY INSTRUCTION LENGTH");
 		for (int i = 0; i < Math.min(superNumber, instr.length); i++) {
 			StageInstruction first = instr[i];
@@ -307,9 +326,9 @@ public class SuperScalar {
 		registerFile.setRegister("R3", 4);
 		registerFile.setRegister("R5", 5);
 		registerFile.setRegister("R7", 0);
-		ScoreBoard scoreBoard = new ScoreBoard(1, 1, 3, 2, 1, 1, 1);
-		scoreboard = scoreBoard;
-		rob = new ROB(4);
+		// ScoreBoard scoreBoard = new ScoreBoard(1, 1, 3, 2, 1, 1, 1);
+		// scoreboard = scoreBoard;
+		// rob = new ROB(4);
 
 		// String[] instructions = {"sub R5 R5 R3", "mul R1 R5 R3",
 		// "lw R1 R2 1"};

@@ -30,6 +30,7 @@ public class CommitHandler {
 			Integer value = SuperScalar.rob.getEntry(head).getValue();
 			SuperScalar.registerFile.setRegister(reg, value.intValue());
 			SuperScalar.rob.commitEntry(head);
+			
 		}
 
 		return true;

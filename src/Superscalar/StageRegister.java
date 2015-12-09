@@ -84,7 +84,7 @@ public class StageRegister {
 	// Revise
 	public int findIndex(StageInstruction stageInstr) {
 		int index = -1;
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 1000; i++) {
 			if (stageInstructions.get(i) != null) {
 				if (stageInstructions.get(i).getScoreKey()
 						.equals(stageInstr.getScoreKey())) {
@@ -100,7 +100,7 @@ public class StageRegister {
 
 	public int findIndexKey(String scoreKey) {
 		int index = -1;
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 1000; i++) {
 			if (stageInstructions.get(i) != null) {
 				if (stageInstructions.get(i).getScoreKey().equals(scoreKey)) {
 					index = i;

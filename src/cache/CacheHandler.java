@@ -151,6 +151,7 @@ public class CacheHandler {
 			}
 			result += hitTime * missRate;
 			if(i >= 0){
+				if(caches[i].getdMiss() == 0 || caches[i].getdHit() == 0)
 				missRate *= caches[i].getdMiss() / (caches[i].getdHit() + caches[i].getdMiss());
 			}
 		}

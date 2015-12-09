@@ -66,6 +66,10 @@ public class Brain {
 			System.out.println("Final  ROB");
 			System.out.println(SuperScalar.rob);
 			System.out.println("-----------------");
+			System.out.println("--- Final Head ----");
+			System.out.println(SuperScalar.rob.getHead());
+			System.out.println("--- Final Tail ----");
+			System.out.println(SuperScalar.rob.getTail());
 			cycles++;
 			return true;
 
@@ -131,6 +135,10 @@ public class Brain {
 			System.out.println("Final  ROB");
 			System.out.println(finalROB);
 			System.out.println("-----------------");
+			System.out.println("--- Final Head ----");
+			System.out.println(SuperScalar.rob.getHead());
+			System.out.println("--- Final Tail ----");
+			System.out.println(SuperScalar.rob.getTail());
 			cycles++;
 			return true;
 		}
@@ -192,6 +200,10 @@ public class Brain {
 			System.out.println("Final  ROB");
 			System.out.println(finalROB);
 			System.out.println("-----------------");
+			System.out.println("--- Final Head ----");
+			System.out.println(SuperScalar.rob.getHead());
+			System.out.println("--- Final Tail ----");
+			System.out.println(SuperScalar.rob.getTail());
 			cycles++;
 			return true;
 		}
@@ -207,10 +219,12 @@ public class Brain {
 					&& finalrob.getROBEntry()[i] != null) {
 				//System.out.println("HEREE FULL " + finalrob.getROBEntry()[i]);
 				originalROB.getROBEntry()[i] = finalrob.getROBEntry()[i];
+				originalROB.setTail(finalrob.getTail());
 			} else {
 				if (originalROB.getROBEntry()[i] != null
 						&& commitWriteROB.getROBEntry()[i] == null) {
 					originalROB.getROBEntry()[i] = null;
+					originalROB.setHead(commitWriteROB.getHead());
 				} else {
 					if (originalROB.getROBEntry()[i] != null
 							&& !originalROB.getROBEntry()[i].isReady()
@@ -443,6 +457,9 @@ public class Brain {
 
 	public ROB copyROB(ROB original) {
 		ROB copy = new ROB(original.size);
+		copy.setHead(original.getHead());
+		copy.setTail(original.getTail());
+		
 		for (int i = 1; i < original.getROBEntry().length; i++) {
 			if (original.getROBEntry()[i] == null) {
 				copy.getROBEntry()[i] = null;
@@ -452,6 +469,11 @@ public class Brain {
 						e.getValue(), e.isReady());
 			}
 		}
+		
+		
+		
+		System.out.println(copy.getHead() + " HEAD");
+		System.out.println(copy.getTail() + " TAIL");
 		return copy;
 	}
 
